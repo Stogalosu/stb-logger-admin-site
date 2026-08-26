@@ -37,7 +37,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, "font-sans", inter.variable)}
     >
       <body className="min-h-full flex flex-col">
-        <header className="sticky top-0 z-50 flex items-center w-full border-b h-14 p-6">
+        <header className="sticky top-0 z-50 flex items-center w-full bg-background border-b h-14 p-6">
           <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem>
@@ -49,7 +49,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             </NavigationMenuList>
           </NavigationMenu>
         </header>
-        <main /*className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white sm:items-start"*/>
+        <main>
           <ThemeProvider
                 attribute="class"
                 defaultTheme="system"
