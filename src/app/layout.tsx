@@ -36,29 +36,29 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       suppressHydrationWarning
       className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, "font-sans", inter.variable)}
     >
-      <body className="min-h-full flex flex-col">
-        <header className="sticky top-0 z-50 flex items-center w-full bg-background border-b h-14 p-6">
-          <NavigationMenu>
-            <NavigationMenuList>
-              <NavigationMenuItem>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()} render={<Link href="/">Dashboard</Link>} />
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()} render={<Link href="/edit">Edit</Link>} />
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
-        </header>
-        <main>
-          <ThemeProvider
-                attribute="class"
-                defaultTheme="system"
-                enableSystem
-                disableTransitionOnChange
-            >
-              {children}
-            </ThemeProvider>
-        </main>
+      <body className="min-h-full flex flex-col" suppressHydrationWarning>
+        <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+        >
+          <header className="sticky top-0 z-50 flex items-center w-full bg-background border-b h-14 p-6">
+            <NavigationMenu>
+              <NavigationMenuList>
+                <NavigationMenuItem>
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()} render={<Link href="/">Dashboard</Link>} />
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()} render={<Link href="/edit">Edit</Link>} />
+                </NavigationMenuItem>
+              </NavigationMenuList>
+            </NavigationMenu>
+          </header>
+          <main>
+            {children}
+          </main>
+        </ThemeProvider>
       </body>
     </html>
   );
