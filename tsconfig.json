@@ -28,7 +28,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts"
+    "**/*.mts",
+    "src/types.d.ts" // 💡 Explicitly add your global types file if it's not being picked up
   ],
   "exclude": ["node_modules"]
 }
