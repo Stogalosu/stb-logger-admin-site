@@ -10,23 +10,41 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { BusFront } from "lucide-react";
+import { db } from "@/lib/firebase";
+import { getDocs, collection } from "firebase/firestore";
 
-export default function Home() {
+async function getLines() {
+  const snap = await getDocs(collection(db, 'lines'));
+  // return snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  return snap.docs.map(doc => ({ ...doc.data() }));
+}
+
+function LineCard({ key, line }: { key: number, line: { id: number, name: string, from: string, to: string } }) {
   return (
-    <div className="flex flex-col min-h-screen w-full px-12 py-8">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="flex flex-row gap-2">
             <BusFront className="text-trolleybus-green"/>
-            Line 70
+            Line {line.name}
           </CardTitle>
-          <CardDescription >Bd. Basarabia - Facultatea de Medicină</CardDescription>
+          <CardDescription >{line.from} - {line.to}</CardDescription>
           <CardAction className="flex flex-col items-center gap-1">
             <Button variant="link">View</Button>
             <Button>Edit</Button>
           </CardAction>
         </CardHeader>
       </Card>
+  );
+}
+
+export default async function Home() {
+  const lines = await getLines();
+
+  return (
+    <div className="flex flex-col min-h-screen w-full px-12 py-8">
+      {lines.map((line) => (
+          <LineCard key={line.id} line={line}/>
+      ))}
     </div>
   );
 }
