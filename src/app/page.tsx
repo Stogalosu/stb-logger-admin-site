@@ -12,6 +12,7 @@ import {
 import { BusFront } from "lucide-react";
 import { db } from "@/lib/firebase";
 import { getDocs, collection } from "firebase/firestore";
+import LineIcon from "@/components/line-icon";
 
 async function getLines() {
   const snap = await getDocs(collection(db, 'lines'));
@@ -24,7 +25,7 @@ function LineCard({ key, line }: { key: number, line: Line }) {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="flex flex-row gap-2">
-            <BusFront className="text-trolleybus-green"/>
+            <LineIcon line={line}/>
             Line {line.name}
           </CardTitle>
           <CardDescription >{line.from} - {line.to}</CardDescription>
