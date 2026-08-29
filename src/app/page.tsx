@@ -20,9 +20,9 @@ async function getLines() {
   return snap.docs.map(doc => ({ ...doc.data() }));
 }
 
-function LineCard({ key, line }: { key: number, line: Line }) {
+function LineCard({ line }: { line: Line }) {
   return (
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-md shrink-0">
         <CardHeader>
           <CardTitle className="flex flex-row gap-2">
             <LineIcon line={line}/>
@@ -42,10 +42,15 @@ export default async function Home() {
   const lines = await getLines() as Line[];
 
   return (
-    <div className="flex flex-col min-h-screen w-full gap-4 px-12 py-8">
-      {lines.map((line) => (
-          <LineCard key={line.id} line={line}/>
-      ))}
+    <div className="flex flex-row h-full w-full justify-start">
+      <div className="flex flex-col w-[35rem] h-full overflow-y-auto gap-4 px-12 py-8 border-r">
+        {lines.map((line) => (
+            <LineCard key={line.id} line={line}/>
+        ))}
+      </div>
+      <div className="flex flex-1 p-8 justify-center items-center">
+        <p>Map</p>
+      </div>
     </div>
   );
 }
