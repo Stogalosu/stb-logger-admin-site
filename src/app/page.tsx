@@ -8,7 +8,6 @@ import { Plus } from "lucide-react";
 
 async function getLines() {
   const snap = await getDocs(collection(db, 'lines'));
-  // return snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
   return snap.docs.map(doc => ({ ...doc.data() }));
 }
 
@@ -27,7 +26,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ l
             ))}
             <div className="flex h-40 w-1"/>
           </div>
-          <Button variant="default" className="absolute h-14 w-28 bottom-8 right-8 shadow-lg hover:shadow-xl transition-shadow">
+          <Button className="absolute h-14 w-28 bottom-8 right-8 border-1 border-foreground/5 dark:border-foreground/10 shadow-lg hover:shadow-xl transition-shadow">
               <Plus/>
               New line
           </Button>
