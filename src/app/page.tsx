@@ -3,6 +3,8 @@ import { db } from "@/lib/firebase";
 import { getDocs, collection } from "firebase/firestore";
 import LineCard from "@/components/line-card";
 import LineMap from "@/components/line-map";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 
 async function getLines() {
   const snap = await getDocs(collection(db, 'lines'));
@@ -18,10 +20,17 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ l
   if(lineId != null)
     return (
       <div className="flex flex-row h-full w-full justify-start">
-        <div className="flex flex-col w-[35rem] h-full overflow-y-auto gap-4 px-12 py-8 border-r">
-          {lines.map((l) => (
+        <div className="flex flex-col h-full gap-4 border-r relative">
+          <div className="flex flex-col w-[38vw] h-full overflow-y-auto px-12 pb-24 py-8 gap-4">
+            {lines.map((l) => (
               <LineCard key={l.id} line={l} selected={l.id == Number(lineId)}/>
-          ))}
+            ))}
+            <div className="flex h-40 w-1"/>
+          </div>
+          <Button variant="default" className="absolute h-14 w-28 bottom-8 right-8 shadow-lg hover:shadow-xl transition-shadow">
+              <Plus/>
+              New line
+          </Button>
         </div>
         <LineMap line={line}/>
       </div>
