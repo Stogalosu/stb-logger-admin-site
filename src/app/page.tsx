@@ -3,9 +3,7 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardAction,
-  CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -38,19 +36,33 @@ function LineCard({ line }: { line: Line }) {
   );
 }
 
-export default async function Home() {
+export default async function Home({ searchParams }: { searchParams: Promise<{ line?: number }> }) {
+  const { line } = await searchParams;
   const lines = await getLines() as Line[];
 
-  return (
-    <div className="flex flex-row h-full w-full justify-start">
-      <div className="flex flex-col w-[35rem] h-full overflow-y-auto gap-4 px-12 py-8 border-r">
-        {lines.map((line) => (
-            <LineCard key={line.id} line={line}/>
-        ))}
+
+  if(line != null)
+    return (
+      <div className="flex flex-row h-full w-full justify-start">
+        <div className="flex flex-col w-[35rem] h-full overflow-y-auto gap-4 px-12 py-8 border-r">
+          {lines.map((l) => (
+              <LineCard key={l.id} line={l}/>
+          ))}
+        </div>
+        <div className="flex flex-1 p-8 justify-center items-center">
+          <p>Map</p>
+        </div>
       </div>
-      <div className="flex flex-1 p-8 justify-center items-center">
-        <p>Map</p>
-      </div>
-    </div>
-  );
+    );
+  else
+    return (
+        <div className="flex flex-col h-full w-full items-center overflow-y-auto">
+            <p className="text-2xl font-bold pt-8">Lines</p>
+          <div className="grid grid-cols-2 auto-rows-[minmax(7rem,auto)] w-[70vw] h-full gap-4 px-12 py-8 self-center items-start content-start">
+            {lines.map((l) => (
+                <LineCard key={l.id} line={l}/>
+            ))}
+          </div>
+        </div>
+    );
 }
