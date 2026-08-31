@@ -16,13 +16,13 @@ export default function LineCard({ line, selected }: { line: Line, selected: boo
         redirect(`/?lineId=${line.id}`);
     }
 
-    const cardCSS: Record<boolean, string> = {
-        false: 'w-full max-w-md shrink-0',
-        true: 'w-full max-w-md shrink-0 border-1 border-primary'
-    };
+    let cardCSS = '';
+    if(selected)
+        cardCSS = 'w-full max-w-md shrink-0 border-1 border-primary';
+    else cardCSS = 'w-full max-w-md shrink-0'
 
     return (
-        <Card className={cardCSS[selected]}>
+        <Card className={cardCSS}>
             <CardHeader>
                 <CardTitle className="flex flex-row gap-2">
                     <LineIcon line={line}/>

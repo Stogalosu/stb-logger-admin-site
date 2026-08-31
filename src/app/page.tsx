@@ -13,7 +13,7 @@ async function getLines() {
 export default async function Home({ searchParams }: { searchParams: Promise<{ lineId?: string }> }) {
   const { lineId } = await searchParams;
   const lines = await getLines() as Line[];
-  const line = lines.find((elem) => elem.id == Number(lineId));
+  const line = lines.find((elem) => elem.id == Number(lineId)) ?? lines[0];
 
   if(lineId != null)
     return (
