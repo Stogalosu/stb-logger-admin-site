@@ -36,13 +36,19 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ l
     );
   else
     return (
-        <div className="flex flex-col h-full w-full items-center overflow-y-auto">
-          <p className="text-2xl font-bold pt-8">Lines</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 auto-rows-[minmax(7rem,auto)] w-[70vw] h-full gap-4 px-12 py-8 self-center items-start content-start">
-            {lines.map((l) => (
-                <LineCard key={l.id} line={l} selected={l.id == Number(lineId)}/>
-            ))}
+        <div className="flex flex-col h-full w-full relative">
+          <div className="flex flex-col h-full w-full items-center overflow-y-auto">
+            <p className="text-2xl font-bold pt-8">Lines</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 auto-rows-[minmax(7rem,auto)] w-[70vw] h-full gap-4 px-[5vw] py-8 self-center items-start content-start">
+              {lines.map((l) => (
+                  <LineCard key={l.id} line={l} selected={false}/>
+              ))}
+            </div>
           </div>
+          <Button className="absolute h-14 w-28 bottom-8 right-8 border-1 border-foreground/5 dark:border-foreground/10 shadow-lg hover:shadow-xl transition-shadow">
+              <Plus/>
+              New line
+          </Button>
         </div>
     );
 }
