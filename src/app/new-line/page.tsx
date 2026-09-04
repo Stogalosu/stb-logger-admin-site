@@ -14,6 +14,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import createNewLine from "./actions";
 
 export default function NewLine() {
     const types = [
@@ -27,12 +28,13 @@ export default function NewLine() {
         <div className="flex flex-col h-full w-full items-center relative">
             <div className="flex flex-col h-full w-[50vw] items-center overflow-y-auto">
                 <p className="text-2xl font-bold pt-8 pb-8">New Line</p>
-                <form className="w-full max-w-sm">
+                <form action={createNewLine} className="w-full max-w-sm">
                     <FieldGroup>
                         <Field>
-                            <FieldLabel htmlFor="form-name">Name</FieldLabel>
+                            <FieldLabel htmlFor="name">Name</FieldLabel>
                             <Input
-                                id="form-name"
+                                id="name"
+                                name="name"
                                 type="text"
                                 placeholder="311"
                                 required
@@ -40,21 +42,22 @@ export default function NewLine() {
                             <FieldDescription>This is pretty self-explanatory</FieldDescription>
                         </Field>
                         <Field>
-                            <FieldLabel htmlFor="form-id">Line ID</FieldLabel>
+                            <FieldLabel htmlFor="id">Line ID</FieldLabel>
                             <div className="flex flex-row gap-4">
                                 <Input
-                                    id="form-name"
+                                    id="id"
+                                    name="id"
                                     type="number"
                                     placeholder="136"
                                     required
                                 />
-                                <Button variant="secondary">Get from STB DB</Button>
+                                <Button type="button" variant="secondary">Get from STB DB</Button>
                             </div>
                             <FieldDescription>Autocomplete is WIP</FieldDescription>
                         </Field>
                         <Field>
-                            <FieldLabel htmlFor="form-id">Type</FieldLabel>
-                            <Select items={types}>
+                            <FieldLabel htmlFor="type">Type</FieldLabel>
+                            <Select items={types} id="type" name="type">
                                 <SelectTrigger>
                                     <SelectValue placeholder="Bus" />
                                 </SelectTrigger>
@@ -71,9 +74,10 @@ export default function NewLine() {
                         </Field>
                         <div className="flex flex-row gap-8">
                             <Field>
-                                <FieldLabel htmlFor="form-from">From</FieldLabel>
+                                <FieldLabel htmlFor="from">From</FieldLabel>
                                 <Input
-                                    id="form-from"
+                                    id="from"
+                                    name="from"
                                     type="text"
                                     placeholder="Faur"
                                     required
@@ -81,9 +85,10 @@ export default function NewLine() {
                                 <FieldDescription>Start of route</FieldDescription>
                             </Field>
                             <Field>
-                                <FieldLabel htmlFor="form-to">To</FieldLabel>
+                                <FieldLabel htmlFor="to">To</FieldLabel>
                                 <Input
-                                    id="form-to"
+                                    id="to"
+                                    name="to"
                                     type="text"
                                     placeholder="Sala Palatului"
                                     required
