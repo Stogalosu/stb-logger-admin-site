@@ -14,14 +14,9 @@ export default function ParamsToaster({ success, error }: { success: string | un
         if ((!success && !error) || triggered.current) return;
         triggered.current = true;
 
-        switch(success) {
-            case 'created-line':
-                toast.add({
-                    type: "success",
-                    title: "Created line!"
-                });
-                break;
-        }
+        // switch(success) {
+        //
+        // }
 
         switch(error) {
             case 'line-not-found':
@@ -29,13 +24,6 @@ export default function ParamsToaster({ success, error }: { success: string | un
                     type: "error",
                     title: "Line not found!",
                     priority: "high",
-                });
-                break;
-            case 'failed-create':
-                toast.add({
-                    type: "error",
-                    title: "Failed to create line!",
-                    priority: "high"
                 });
                 break;
         }

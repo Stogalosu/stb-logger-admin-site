@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { db } from "@/lib/firebase";
 import { collection, addDoc } from "firebase/firestore";
 
-export default async function createNewLine(formData: FormData) {
+export default async function createNewLine(formData: FormData): Promise<{line: Line, error: any}> {
     const name = String(formData.get('name'));
     const id = Number(formData.get('id'));
     const type = formData.get('type') as LineType;
@@ -16,9 +16,9 @@ export default async function createNewLine(formData: FormData) {
     try {
         const collectionRef = collection(db, "lines");
         const docRef = await addDoc(collectionRef, line);
-    } catch (error) {
-        redirect(`/?error=failed-create`);
+        return { line: line, error: null };
+    } catch (error: any) {
+        console.error("Failed to create line: ", error);
+        return { line: line, error: error };
     }
-
-    redirect(`/?lineId=${id}&s=created-line`);
 }
