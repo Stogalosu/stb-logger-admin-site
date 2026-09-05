@@ -31,6 +31,13 @@ export default function ParamsToaster({ success, error }: { success: string | un
                     priority: "high",
                 });
                 break;
+            case 'failed-create':
+                toast.add({
+                    type: "error",
+                    title: "Failed to create line!",
+                    priority: "high"
+                });
+                break;
         }
 
         const params = new URLSearchParams(searchParams.toString());

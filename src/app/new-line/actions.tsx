@@ -17,7 +17,7 @@ export default async function createNewLine(formData: FormData) {
         const collectionRef = collection(db, "lines");
         const docRef = await addDoc(collectionRef, line);
     } catch (error) {
-        redirect(`/?error=failed-to-create`);
+        redirect(`/?error=failed-create`);
     }
 
     redirect(`/?lineId=${id}&s=created-line`);
