@@ -1,19 +1,13 @@
 import Image from "next/image";
-import { db } from "@/lib/firebase";
-import { getDocs, collection } from "firebase/firestore";
 import LineCard from "@/components/line-card";
 import LineMap from "@/components/line-map";
 import NewLineButton from "@/components/new-line-button";
 import ParamsToaster from "@/components/params-toaster";
-
-async function getLines() {
-  const snap = await getDocs(collection(db, 'lines'));
-  return snap.docs.map(doc => ({ ...doc.data() }));
-}
+import { getLines } from "@/actions/lines";
 
 export default async function Home({ searchParams }: { searchParams: Promise<{ lineId?: string, s?: string, err?: string }> }) {
     const { lineId, s, err } = await searchParams;
-    const lines = await getLines() as Line[];
+    const lines = await getLines();
 
     if(lineId != null) {
         const line = lines.find((elem) => elem.id == Number(lineId));
