@@ -4,15 +4,15 @@ import { getDocs, collection } from "firebase/firestore";
 import LineCard from "@/components/line-card";
 import LineMap from "@/components/line-map";
 import NewLineButton from "@/components/new-line-button";
-import ErrorToaster from "@/components/error-toaster";
+import ParamsToaster from "@/components/params-toaster";
 
 async function getLines() {
   const snap = await getDocs(collection(db, 'lines'));
   return snap.docs.map(doc => ({ ...doc.data() }));
 }
 
-export default async function Home({ searchParams }: { searchParams: Promise<{ lineId?: string, err?: string }> }) {
-    const { lineId, err } = await searchParams;
+export default async function Home({ searchParams }: { searchParams: Promise<{ lineId?: string, s?: string, err?: string }> }) {
+    const { lineId, s, err } = await searchParams;
     const lines = await getLines() as Line[];
 
     if(lineId != null) {
@@ -21,6 +21,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ l
         return (
             <div className="flex flex-row h-full w-full justify-start">
                 <div className="flex flex-col h-full gap-4 border-r relative">
+                    <ParamsToaster success={s} error={err}/>
                     <div className="flex flex-col w-[38vw] h-full overflow-y-auto px-12 pb-24 py-8 gap-4">
                         {lines.map((l) => (
                             <LineCard key={l.id} line={l} selected={l.id == Number(lineId)}/>
@@ -37,7 +38,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ l
     return (
         <div className="flex flex-col h-full w-full relative">
           <div className="flex flex-col h-full w-full items-center overflow-y-auto">
-            <ErrorToaster error={err}/>
+            <ParamsToaster success={s} error={err}/>
             <p className="text-2xl font-bold pt-8">Lines</p>
             <div className="grid grid-cols-1 md:grid-cols-2 auto-rows-[minmax(7rem,auto)] w-[70vw] h-full gap-4 px-[5vw] py-8 self-center items-start content-start">
               {lines.map((l) => (

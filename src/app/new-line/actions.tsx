@@ -16,11 +16,9 @@ export default async function createNewLine(formData: FormData) {
     try {
         const collectionRef = collection(db, "lines");
         const docRef = await addDoc(collectionRef, line);
-        console.log("Document written with ID: ", docRef.id);
     } catch (error) {
-        console.error("Error adding document: ", error);
+        redirect(`/?error=failed-to-create`);
     }
 
-
-    redirect(`/?lineId=${id}`);
+    redirect(`/?lineId=${id}&s=created-line`);
 }
