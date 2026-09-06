@@ -1,7 +1,7 @@
 'use server';
 
 import { redirect } from "next/navigation";
-import { getLines, addLine } from "@/actions/lines";
+import { addLine } from "@/actions/lines";
 
 export default async function createNewLine(formData: FormData): Promise<{line: Line, error: any}> {
     const name = String(formData.get('name'));
