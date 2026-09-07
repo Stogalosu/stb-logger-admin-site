@@ -33,6 +33,21 @@ async function fetchStops() {
     return snap.docs.map(doc => ({...doc.data()})) as Stop[];
 }
 
+export async function findClosestStop(targetLat: number, targetLon: number, subway = 0) {
+    const stops = await getStops();
+    const result =  stops.reduce<{ obj: Stop | null, diff: number }>((closest, obj) => {
+        const diff = Math.sqrt(
+            Math.pow(obj.latitude - targetLat, 2) +
+            Math.pow(obj.longitude - targetLon, 2)
+        );
+        if (diff >= closest.diff) return closest;
+        if (subway && obj.type !== 1) return closest;
+        return { obj, diff };
+    }, {obj: null, diff: Infinity});
+
+    return result.obj;
+}
+
 export async function getStopsInRange(lat: number, lon: number, range: number) {
     const stops = await getStops();
     let result: Stop[] = [];
