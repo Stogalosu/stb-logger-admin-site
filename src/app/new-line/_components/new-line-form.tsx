@@ -16,7 +16,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import createNewLine from "../actions";
+import { createNewLine } from "../actions";
 import { toast } from "@/components/ui/toast";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
@@ -92,8 +92,8 @@ export default function NewLineForm({ lines }: { lines: Line[] }) {
                         reject(new Error(result.error));
                         return;
                     }
-                    router.replace(`/?lineId=${result.line.id}`);
-                    resolve(result.line);
+                    router.replace(`/?lineId=${result.line!!.id}`);
+                    resolve(result.line!!);
                 } catch (error) {
                     reject(error);
                 }
