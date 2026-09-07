@@ -22,3 +22,8 @@ interface Stop {
     longitude: number;
     type: number;
 }
+
+interface Path {
+    startId: number;
+    endId: number;
+}

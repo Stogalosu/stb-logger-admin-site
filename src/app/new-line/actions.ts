@@ -4,6 +4,7 @@ import { addLine } from "@/actions/lines";
 import AdmZip from 'adm-zip';
 import { parseGPXWithCustomParser, GeoJSON } from "@we-gold/gpxjs";
 import { DOMParser } from "xmldom-qsa";
+import { findClosestStop } from "@/actions/stops";
 
 function isValidZipBuffer(buffer: Buffer) {
     return buffer[0] === 0x50 && buffer[1] === 0x4b;
@@ -48,6 +49,18 @@ export async function processZip(file: File): Promise<{ data: GeoJSON[] | null, 
     return { data: geoJsons, error: null };
 }
 
+async function processGeoJsons(geoJsons: GeoJSON[]) {
+    let paths: Path[] = [];
+    for(const json of geoJsons) {
+        const coords = json.features[0].geometry.coordinates as  number[][];
+        const startStop = await findClosestStop(coords[0][1], coords[0][0]);
+        const endStop = await findClosestStop(coords[coords.length - 1][1], coords[coords.length - 1][0]);
+
+        paths.push({ startId: startStop.id, endId: endStop.id });
+    }
+    return paths;
+}
+
 export async function createNewLine(formData: FormData): Promise<{line: Line | null, error: any}> {
     const name = String(formData.get('name'));
     const id = Number(formData.get('id'));
@@ -67,8 +80,11 @@ export async function createNewLine(formData: FormData): Promise<{line: Line | n
     if (file.size > 10 * 1024 * 1024)
         return { line: null, error: "File too large" };
 
-    const result = await processZip(file);
-    if(result.error) return { line: null, error: result.error };
+    const { data: geoJsons, error: geoError } = await processZip(file);
+    if(geoError) return { line: null, error: geoError };
+
+    const paths = await processGeoJsons(geoJsons!!);
+    console.log(paths);
 
     const line: Line = { name: name, id: id, type: type, from: from, to: to };
 
