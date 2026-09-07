@@ -1,23 +1,16 @@
+'use server';
+
 import { collection, doc,  getDocs, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import path from 'path';
 import fs from 'fs/promises';
 import { revalidatePath } from 'next/cache';
+import { ensureFileExists } from './files';
 
 const filePath = path.join(process.cwd(), 'data', 'stops.json');
 
-async function ensureFileExists() {
-    const dirPath = path.dirname(filePath);
-    try {
-        await fs.mkdir(dirPath, { recursive: true });
-        await fs.access(filePath);
-    } catch {
-        const time = Math.floor(Date.now() / 1000);
-        await fs.writeFile(filePath, JSON.stringify({ lastUpdated: time, data: []}), 'utf8');
-    }
-}
-
 export async function getStops() {
+    await ensureFileExists(filePath);
     const stopsFile = await fs.readFile(filePath, 'utf8');
     const stopsFileJson = JSON.parse(stopsFile) as { lastUpdated: number, data: Stop[] };
 
