@@ -13,3 +13,12 @@ interface Line {
     from: string;
     to: string;
 }
+
+interface Stop {
+    id: number;
+    name: string;
+    description: string;
+    latitude: number;
+    longitude: number;
+    type: number;
+}
