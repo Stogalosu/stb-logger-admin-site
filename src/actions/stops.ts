@@ -34,8 +34,16 @@ async function fetchStops() {
 }
 
 export async function findClosestStop(targetLat: number, targetLon: number, subway = 0) {
+    const nullStop: Stop = {
+        id: 0,
+        name: "",
+        description: "",
+        latitude: 0,
+        longitude: 0,
+        type: 0
+    }
     const stops = await getStops();
-    const result =  stops.reduce<{ obj: Stop | null, diff: number }>((closest, obj) => {
+    const result =  stops.reduce<{ obj: Stop, diff: number }>((closest, obj) => {
         const diff = Math.sqrt(
             Math.pow(obj.latitude - targetLat, 2) +
             Math.pow(obj.longitude - targetLon, 2)
@@ -43,7 +51,7 @@ export async function findClosestStop(targetLat: number, targetLon: number, subw
         if (diff >= closest.diff) return closest;
         if (subway && obj.type !== 1) return closest;
         return { obj, diff };
-    }, {obj: null, diff: Infinity});
+    }, {obj: nullStop, diff: Infinity});
 
     return result.obj;
 }
