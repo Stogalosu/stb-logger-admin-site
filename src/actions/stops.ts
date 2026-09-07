@@ -32,3 +32,16 @@ async function fetchStops() {
     const snap = await getDocs(collection(db, 'stops'));
     return snap.docs.map(doc => ({...doc.data()})) as Stop[];
 }
+
+export async function getStopsInRange(lat: number, lon: number, range: number) {
+    const stops = await getStops();
+    let result: Stop[] = [];
+    stops.forEach((stop: Stop) => {
+        const dist = Math.sqrt(
+            Math.pow(stop.latitude - lat, 2) +
+            Math.pow(stop.longitude - lon, 2)
+        );
+        if (dist < range) result.push(stop);
+    });
+    return result;
+}
