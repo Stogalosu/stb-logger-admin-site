@@ -11,3 +11,13 @@ export async function ensureFileExists(filePath: string) {
         await fs.writeFile(filePath, JSON.stringify({ lastUpdated: time, data: []}), 'utf8');
     }
 }
+
+export async function readParseJson(filePath: string) {
+    await ensureFileExists(filePath);
+    const file = await fs.readFile(filePath, 'utf8');
+    return JSON.parse(file);
+}
+
+export async function writeJson(filePath: string, json: any) {
+    await fs.writeFile(filePath, JSON.stringify(filePath, null, 2), 'utf8');
+}

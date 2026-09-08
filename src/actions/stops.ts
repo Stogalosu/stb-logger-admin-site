@@ -5,14 +5,12 @@ import { db } from "@/lib/firebase";
 import path from 'path';
 import fs from 'fs/promises';
 import { revalidatePath } from 'next/cache';
-import { ensureFileExists } from './files';
+import { readParseJson, writeJson } from './files';
 
 const filePath = path.join(process.cwd(), 'data', 'stops.json');
 
 export async function getStops() {
-    await ensureFileExists(filePath);
-    const stopsFile = await fs.readFile(filePath, 'utf8');
-    const stopsFileJson = JSON.parse(stopsFile) as { lastUpdated: number, data: Stop[] };
+    const stopsFileJson = (await readParseJson(filePath)) as { lastUpdated: number, data: Stop[] };
 
     const metadataRef = doc(db, "metadata", "list_updates");
     const metaSnap = await getDoc(metadataRef);
@@ -22,7 +20,7 @@ export async function getStops() {
     if(lastUpdatedTime >= stopsFileJson.lastUpdated) {
         const stops = await fetchStops();
         stopsFileJson.data = stops;
-        await fs.writeFile(filePath, JSON.stringify(stopsFileJson, null, 2), 'utf8');
+        await writeJson(filePath, stopsFileJson);
         return stops;
     } else return stopsFileJson.data;
 

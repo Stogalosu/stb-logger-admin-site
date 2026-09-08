@@ -5,14 +5,13 @@ import { db } from "@/lib/firebase";
 import path from 'path';
 import fs from 'fs/promises';
 import { revalidatePath } from 'next/cache';
-import { ensureFileExists } from './files';
+import { readParseJson, writeJson } from './files';
 
 const filePath = path.join(process.cwd(), 'data', 'lines.json');
+const tempFilePath = path.join(process.cwd(), 'data', 'temp-lines.json');
 
 export async function getLines() {
-    await ensureFileExists(filePath);
-    const linesFile = await fs.readFile(filePath, 'utf8');
-    const linesFileJson = JSON.parse(linesFile) as { lastUpdated: number, data: Line[] };
+    const linesFileJson = (await readParseJson(filePath)) as { lastUpdated: number, data: Line[] };
 
     const metadataRef = doc(db, "metadata", "list_updates");
     const metaSnap = await getDoc(metadataRef);
@@ -35,4 +34,24 @@ async function fetchLines() {
 export async function addLine(line: Line) {
     const collectionRef = collection(db, "lines");
     await addDoc(collectionRef, line);
+}
+
+export async function getTempLines() {
+    return (await readParseJson(tempFilePath)) as { [key: number]: Line };
+}
+
+export async function addTempLine(line: Line) {
+    const tempLines = (await readParseJson(tempFilePath)) as { [key: number]: Line };
+
+    tempLines[line.id] = line;
+
+    await writeJson(tempFilePath, tempLines);
+}
+
+export async function removeTempLine(lineId: number) {
+    const tempLines = (await readParseJson(tempFilePath)) as { [key: number]: Line };
+
+    delete tempLines[lineId];
+
+    await writeJson(tempFilePath, tempLines);
 }
