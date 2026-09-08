@@ -16,11 +16,12 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { createNewLine } from "../create/actions";
+import { processFormData } from "../create/actions";
 import { toast } from "@/components/ui/toast";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import { useNewLineContext } from "../_context/new-line-context";
 
 const ACCEPTED_ZIP_TYPES = ["application/zip", "application/x-zip-compressed"];
 
@@ -32,6 +33,8 @@ export default function NewLineForm({ lines }: { lines: Line[] }) {
     const [nameValid, setNameValid] = useState(true);
     const [idValid, setIdValid] = useState(true);
     const [fileValid, setFileValid] = useState(true);
+
+    const newLineContext = useNewLineContext();
 
     const types = [
         { label: "Tram", value: "tram" },
@@ -89,13 +92,14 @@ export default function NewLineForm({ lines }: { lines: Line[] }) {
         if(isValidName && isValidId && isValidFile) {
             const onSubmitPromise = new Promise(async (resolve, reject) => {
                 try {
-                    const result = await createNewLine(formData);
+                    const result = await processFormData(formData);
                     if (result?.error) {
                         reject(new Error(result.error));
                         return;
                     }
-                    router.replace(`/?lineId=${result.line!!.id}`);
-                    resolve(result.line!!);
+                    newLineContext.setData(result.data!!);
+                    router.push('/new-line/edit');
+                    resolve();
                 } catch (error) {
                     reject(error);
                 }
@@ -104,9 +108,9 @@ export default function NewLineForm({ lines }: { lines: Line[] }) {
             toast.promise(
                 onSubmitPromise,
                 {
-                    loading: "Creating line…",
-                    success: (data: any) => `Line ${data.name} created!`,
-                    error: (e) => `Failed to create line: ${e}`,
+                    loading: "Processing GPX files…",
+                    success: "Done!",
+                    error: (e) => `Failed to process: ${e}`,
                 }
             )
         }

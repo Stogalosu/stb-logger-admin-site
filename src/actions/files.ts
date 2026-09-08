@@ -19,5 +19,5 @@ export async function readParseJson(filePath: string) {
 }
 
 export async function writeJson(filePath: string, json: any) {
-    await fs.writeFile(filePath, JSON.stringify(filePath, null, 2), 'utf8');
+    await fs.writeFile(filePath, JSON.stringify(json, null, 2), 'utf8');
 }
