@@ -1,4 +1,4 @@
-import NewLineForm from "./_components/new-line-form";
+import NewLineForm from "../_components/new-line-form";
 import { getLines } from "@/actions/lines";
 
 export default async function NewLine() {

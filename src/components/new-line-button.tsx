@@ -8,7 +8,7 @@ export default function NewLineButton() {
     const router = useRouter();
 
     function onClick() {
-        router.push('/new-line');
+        router.push('/new-line/create');
     }
 
     return (
