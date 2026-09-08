@@ -70,6 +70,8 @@ export default function NewLineForm({ lines }: { lines: Line[] }) {
     }
 
     function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+
         const nameValue = nameRef.current?.value ?? "";
         const isValidName = isNameValid(nameValue);
         setNameValid(isValidName);
@@ -107,8 +109,6 @@ export default function NewLineForm({ lines }: { lines: Line[] }) {
                     error: (e) => `Failed to create line: ${e}`,
                 }
             )
-        } else {
-            event.preventDefault();
         }
     }
 
