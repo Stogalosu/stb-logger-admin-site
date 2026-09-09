@@ -210,7 +210,7 @@ export default function NewLineForm({ lines }: { lines: Line[] }) {
                 </Field>
                 <Field className="self-center w-25 pt-8">
                     <Button type="submit" variant="default" >
-                        Create
+                        Next
                     </Button>
                 </Field>
             </FieldGroup>

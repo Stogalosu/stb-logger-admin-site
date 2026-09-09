@@ -84,15 +84,7 @@ export async function processFormData(formData: FormData): Promise<{ data: { lin
     if(geoError) return { data: null, error: geoError };
 
     const paths = await processGeoJsons(geoJsons!!);
-    const line: Line = { name: name, id: id, type: type, from: from, to: to };
+    const line: Line = { name: name, id: id, type: type, from: from, to: to, paths: [] };
 
     return { data: { line, paths }, error: null };
-
-    // try {
-    //     await addLine(line);
-    //     return { line: line, error: null };
-    // } catch (error: any) {
-    //     console.error("Failed to create line: ", error);
-    //     return { line: null, error: error };
-    // }
 }

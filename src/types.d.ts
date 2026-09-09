@@ -12,6 +12,7 @@ interface Line {
     type: Type;
     from: string;
     to: string;
+    paths: Path[];
 }
 
 interface Stop {
