@@ -99,7 +99,7 @@ export default function NewLineForm({ lines }: { lines: Line[] }) {
                     }
                     newLineContext.setData(result.data!!);
                     router.push('/new-line/edit');
-                    resolve();
+                    resolve(true);
                 } catch (error) {
                     reject(error);
                 }
