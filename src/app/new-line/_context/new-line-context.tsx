@@ -2,16 +2,6 @@
 
 import { createContext, useContext, useState, ReactNode } from "react";
 
-interface NewLineData {
-    line: Line | null;
-    paths: Path[] | null;
-}
-
-interface NewLineContextType {
-    data: NewLineData;
-    setData: (data: NewLineData) => void;
-}
-
 const NewLineContext = createContext<NewLineContextType | null>(null);
 
 export function NewLineProvider({ children }: { children: React.ReactNode }) {

@@ -27,3 +27,13 @@ interface Path {
     startId: number;
     endId: number;
 }
+
+interface NewLineData {
+    line: Line | null;
+    paths: Path[] | null;
+}
+
+interface NewLineContextType {
+    data: NewLineData;
+    setData: (data: NewLineData) => void;
+}
