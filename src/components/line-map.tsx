@@ -8,9 +8,13 @@ import { useEffect } from "react";
 import { useRef } from "react";
 import MapProvider from "@/lib/mapbox/provider";
 
-export default function LineMap({ line }: { line: Line | undefined }) {
+export default function LineMap({ line, stops }: { line: Line | undefined, stops: Stop[] }) {
     const router = useRouter();
     const mapContainerRef = useRef<HTMLDivElement | null>(null);
+    const startStops = line?.paths.map(p => stops.find(s => s.id == p.startId)) ?? [];
+    const endStops = line?.paths.map(p => stops.find(s => s.id == p.endId)) ?? [];
+
+    startStops.push(endStops[endStops.length - 1]);
 
     function onClose() {
         router.replace('/');
@@ -28,19 +32,23 @@ export default function LineMap({ line }: { line: Line | undefined }) {
                 <Button variant="outline" size="icon" className="absolute top-2 right-2" onClick={onClose}>
                     <X/>
                 </Button>
-                    <div
-                        id="map-container"
-                        ref={mapContainerRef}
-                        className="absolute inset-0 h-full w-full"
-                    />
-                    <MapProvider
-                        mapContainerRef={mapContainerRef}
-                        initialViewState={{
-                            longitude: 26.102527,
-                            latitude: 44.435511,
-                            zoom: 10,
-                        }}
-                    />
+                    {/*<div*/}
+                    {/*    id="map-container"*/}
+                    {/*    ref={mapContainerRef}*/}
+                    {/*    className="absolute inset-0 h-full w-full"*/}
+                    {/*/>*/}
+                    {/*<MapProvider*/}
+                    {/*    mapContainerRef={mapContainerRef}*/}
+                    {/*    initialViewState={{*/}
+                    {/*        longitude: 26.102527,*/}
+                    {/*        latitude: 44.435511,*/}
+                    {/*        zoom: 10,*/}
+                    {/*    }}*/}
+                    {/*/>*/}
+                <p className="text-2xl font-bold pb-8">Stops:</p>
+                {startStops.map((p, i) => (
+                    <span key={i}>{p?.name}</span>
+                ))}
             </div>
         );
     else return (

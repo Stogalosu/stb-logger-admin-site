@@ -4,10 +4,12 @@ import LineMap from "@/components/line-map";
 import NewLineButton from "@/components/new-line-button";
 import ParamsToaster from "@/components/params-toaster";
 import { getLines } from "@/actions/lines";
+import { getStops } from "@/actions/stops";
 
 export default async function Home({ searchParams }: { searchParams: Promise<{ lineId?: string, s?: string, err?: string }> }) {
     const { lineId, s, err } = await searchParams;
     const lines = await getLines();
+    const stops = await getStops();
 
     if(lineId != null) {
         const line = lines.find((elem) => elem.id == Number(lineId));
@@ -24,7 +26,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ l
                     </div>
                     <NewLineButton/>
                 </div>
-                <LineMap line={line}/>
+                <LineMap line={line} stops={stops}/>
             </div>
         );
     }
