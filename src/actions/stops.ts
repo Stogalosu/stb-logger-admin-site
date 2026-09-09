@@ -23,12 +23,16 @@ export async function getStops() {
         await writeJson(filePath, stopsFileJson);
         return stops;
     } else return stopsFileJson.data;
-
 }
 
 async function fetchStops() {
     const snap = await getDocs(collection(db, 'stops'));
     return snap.docs.map(doc => ({...doc.data()})) as Stop[];
+}
+
+export async function getStop(id: number) {
+    const stops = await getStops();
+    return stops.find(s => s.id == id);
 }
 
 export async function findClosestStop(targetLat: number, targetLon: number, subway = 0) {
