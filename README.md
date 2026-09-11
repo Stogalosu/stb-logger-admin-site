@@ -36,3 +36,7 @@ You can test the website here: https://stb-logger-admin-site.onrender.com
 I used AI for debugging and sometimes for giving me ideas on how to implement something.
 
 ## Screenshots
+<img width="1507" height="826" alt="Screenshot 2026-09-11 at 22 06 17" src="https://github.com/user-attachments/assets/57052e19-00f3-4c9c-8366-eaee914df68b" />
+<img width="1510" height="826" alt="Screenshot 2026-09-11 at 22 06 29" src="https://github.com/user-attachments/assets/5bd62c5d-8091-4240-97c8-c2a988cadd8c" />
+<img width="1512" height="824" alt="Screenshot 2026-09-11 at 22 06 39" src="https://github.com/user-attachments/assets/e81af966-5eed-40c9-864f-1dc5df569357" />
+<img width="1512" height="823" alt="Screenshot 2026-09-11 at 22 07 22" src="https://github.com/user-attachments/assets/0c6bc7af-55b8-4e43-b352-bec343f17b6d" />
