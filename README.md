@@ -32,6 +32,10 @@ pnpm dev
 ## Demo
 You can test the website here: https://stb-logger-admin-site.onrender.com
 
+Please be patient, it's pretty slow. GPX processing takes about 1.5 mins.
+
+You have some demo zip fies that contain real lines' GPX files which you can use to create new lines. They are located in the /demo folder.
+
 ## AI Usage
 I used AI for debugging and sometimes for giving me ideas on how to implement something.
 
