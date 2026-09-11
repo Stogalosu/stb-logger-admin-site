@@ -28,7 +28,7 @@ export default function LineMap({ line, stops }: { line: Line | undefined, stops
 
     if(line != undefined)
         return (
-            <div className="flex flex-col flex-1 h-full p-10 justify-center items-center relative">
+            <div className="flex flex-col flex-1 h-full p-10 items-center relative overflow-y-auto">
                 <Button variant="outline" size="icon" className="absolute top-2 right-2" onClick={onClose}>
                     <X/>
                 </Button>
@@ -45,10 +45,12 @@ export default function LineMap({ line, stops }: { line: Line | undefined, stops
                     {/*        zoom: 10,*/}
                     {/*    }}*/}
                     {/*/>*/}
-                <p className="text-2xl font-bold pb-8">Stops:</p>
-                {startStops.map((p, i) => (
-                    <span key={i}>{p?.name}</span>
-                ))}
+                <div className="flex flex-col items-center py-8 absolute top-1">
+                    <p className="text-2xl font-bold pb-8">Stops:</p>
+                    {startStops.map((p, i) => (
+                        <span key={i}>{p?.name}</span>
+                    ))}
+                </div>
             </div>
         );
     else return (
