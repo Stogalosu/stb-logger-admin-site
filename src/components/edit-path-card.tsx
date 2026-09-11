@@ -30,7 +30,7 @@ export default function EditPathCard({ index, startStop, endStop, stops }: { ind
     }
 
     return (
-        <Card>
+        <Card className="shrink-0">
             <CardContent className="flex flex-row gap-4 items-center">
                 <span>{index + 1}.</span>
                 <Combobox

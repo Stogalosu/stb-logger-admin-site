@@ -44,7 +44,7 @@ export default function EditPaths({ stops }: { stops: Stop[] }) {
     }
 
     return (
-        <div className="flex flex-col h-full w-[50vw] items-center overflow-y-auto px-12 py-8">
+        <div className="flex flex-col h-full w-full items-center overflow-y-auto px-12 py-8 gap-4">
             <p className="text-2xl font-bold pb-8">Edit paths</p>
             {paths.map((path, i) => (
                 <EditPathCard key={i} index={i} startStop={startStops[i]} endStop={endStops[i]} stops={stops}/>
