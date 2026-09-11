@@ -16,16 +16,19 @@ import {
 interface Option {
     value: string;
     label: string
-}
+};
 
-export function Combobox({ options, optionName, defaultValue }: { options: Option[], optionName: string, defaultValue: Option }) {
+export function Combobox(
+    { options, optionName, defaultValue, onValueChange }:
+    { options: Option[], optionName: string, defaultValue: Option, onValueChange: (value: Option) => void }
+) {
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState(defaultValue.value);
     const [searchQuery, setSearchQuery] = useState("");
     const selected = options.find((f) => f.value === value);
     const placeholder = `Search ${optionName}…`;
 
-    const isSearchEmpty = searchQuery.trim().length == 0
+    const isSearchEmpty = searchQuery.trim().length == 0;
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
@@ -53,6 +56,7 @@ export function Combobox({ options, optionName, defaultValue }: { options: Optio
                                         key={f.value}
                                         value={f.value}
                                         onSelect={(v) => {
+                                            onValueChange(f);
                                             setValue(v === value ? "" : v)
                                             setOpen(false)
                                         }}

@@ -49,6 +49,7 @@ export default function EditPaths({ stops }: { stops: Stop[] }) {
             {paths.map((path, i) => (
                 <EditPathCard key={i} index={i} startStop={startStops[i]} endStop={endStops[i]} stops={stops}/>
             ))}
+            <div className="flex p-4"/>
             <Button variant="default" onClick={onCreate}>
                 Create line
             </Button>
