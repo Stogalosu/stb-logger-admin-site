@@ -30,7 +30,7 @@ pnpm dev
 ```
 
 ## Demo
-You can test the website here: https://stb-logger-admin-site.vercel.app
+You can test the website here: https://stb-logger-admin-site.onrender.com
 
 ## AI Usage
 I used AI for debugging and sometimes for giving me ideas on how to implement something.
