@@ -2,33 +2,38 @@
 
 import { collection, doc,  getDocs, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import path from 'path';
-import fs from 'fs/promises';
-import { revalidatePath } from 'next/cache';
-import { readParseJson, writeJson } from './files';
+import { unstable_cache, updateTag } from 'next/cache';
 
-const filePath = path.join(process.cwd(), 'data', 'stops.json');
+const getStopUpdateCache = unstable_cache(
+    async () => { return Math.floor(Date.now() / 1000); },
+    ['stops-updated-cache'],
+    { tags: ['stops-updated'] }
+);
 
 export async function getStops() {
-    const stopsFileJson = (await readParseJson(filePath)) as { lastUpdated: number, data: Stop[] };
-
     const metadataRef = doc(db, "metadata", "list_updates");
     const metaSnap = await getDoc(metadataRef);
 
     const time = Math.floor(Date.now() / 1000);
     const lastUpdatedTime = metaSnap.data()?.stopsLastUpdated as number ?? time;
-    if(lastUpdatedTime >= stopsFileJson.lastUpdated) {
-        const stops = await fetchStops();
-        stopsFileJson.data = stops;
-        await writeJson(filePath, stopsFileJson);
-        return stops;
-    } else return stopsFileJson.data;
+    const lastUpdateCache = await getStopUpdateCache();
+    if(lastUpdatedTime >= lastUpdateCache) {
+        updateTag('stops');
+        updateTag('stops-updated');
+        await getStopUpdateCache();
+    }
+
+    return await getStopsCache();
 }
 
-async function fetchStops() {
-    const snap = await getDocs(collection(db, 'stops'));
-    return snap.docs.map(doc => ({...doc.data()})) as Stop[];
-}
+const getStopsCache = unstable_cache(
+    async () => {
+        const snap = await getDocs(collection(db, 'stops'));
+        return snap.docs.map(doc => ({...doc.data()})) as Stop[];
+    },
+    ['stops-cache'],
+    { tags: ['stops'] }
+);
 
 export async function getStop(id: number) {
     const stops = await getStops();
