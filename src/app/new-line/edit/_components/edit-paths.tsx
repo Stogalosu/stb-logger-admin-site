@@ -44,13 +44,13 @@ export default function EditPaths({ stops }: { stops: Stop[] }) {
     }
 
     return (
-        <div className="flex flex-col h-full w-full items-center overflow-y-auto px-12 py-8 gap-4">
-            <p className="text-2xl font-bold pb-8">Edit paths</p>
+        <div className="flex flex-col h-full shrink-0 overflow-y-auto px-12 py-8 gap-4">
+            <p className="text-2xl font-bold pb-8 self-center">Edit paths</p>
             {paths.map((path, i) => (
                 <EditPathCard key={i} index={i} startStop={startStops[i]} endStop={endStops[i]} stops={stops}/>
             ))}
             <div className="flex p-4"/>
-            <Button variant="default" onClick={onCreate}>
+            <Button variant="default" onClick={onCreate} className="max-w-35 self-center">
                 Create line
             </Button>
         </div>

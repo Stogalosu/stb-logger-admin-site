@@ -5,6 +5,7 @@ import { Combobox } from "@/components/ui/combobox";
 import LineIcon from "@/components/line-icon";
 import { Button } from "@/components/ui/button";
 import { useNewLineContext } from "@/app/new-line/_context/new-line-context";
+import { MoveRight } from "lucide-react";
 
 
 export default function EditPathCard({ index, startStop, endStop, stops }: { index: number, startStop: Stop, endStop: Stop, stops: Stop[] }) {
@@ -31,14 +32,17 @@ export default function EditPathCard({ index, startStop, endStop, stops }: { ind
 
     return (
         <Card className="shrink-0">
-            <CardContent className="flex flex-row gap-4 items-center">
-                <span>{index + 1}.</span>
-                <Combobox
-                    options={stopsDisplay}
-                    optionName="stop"
-                    defaultValue={startDisplay}
-                    onValueChange={onStartChange}
-                />
+            <CardContent className="flex flex-row items-center justify-between">
+                <div className="flex gap-4 items-center">
+                    <span>{index + 1}.</span>
+                    <Combobox
+                        options={stopsDisplay}
+                        optionName="stop"
+                        defaultValue={startDisplay}
+                        onValueChange={onStartChange}
+                    />
+                </div>
+                <MoveRight/>
                 <Combobox
                     options={stopsDisplay}
                     optionName="stop"
