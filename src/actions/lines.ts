@@ -1,6 +1,6 @@
 'use server';
 
-import { collection, doc, addDoc, getDocs, getDoc } from "firebase/firestore";
+import { collection, doc, addDoc, getDocs, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { unstable_cache } from 'next/cache';
 
@@ -27,4 +27,9 @@ export async function getLines() {
 export async function addLine(line: Line) {
     const collectionRef = collection(db, "lines");
     await addDoc(collectionRef, line);
+
+    const metadataRef = doc(db, "metadata", "list_updates");
+    await updateDoc(metadataRef, {
+        linesLastUpdated: Math.floor(Date.now() / 1000)
+    });
 }
