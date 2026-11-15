@@ -26,11 +26,10 @@ export function NewLineProvider({ children }: { children: React.ReactNode }) {
 
     const clearCache = () => {
         localStorage.removeItem('new-line-context-data');
-        setData({ line: null, paths: null });
     };
 
     return (
-        <NewLineContext value={{ data, setData }}>
+        <NewLineContext value={{ data, setData, clearCache }}>
             { children }
         </NewLineContext>
     );

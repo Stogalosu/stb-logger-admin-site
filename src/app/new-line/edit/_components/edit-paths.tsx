@@ -8,6 +8,7 @@ import { processFormData } from "@/app/new-line/create/actions";
 import { toast } from "@/components/ui/toast";
 import { createLine } from "../actions";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function EditPaths({ stops }: { stops: Stop[] }) {
     const context: NewLineContextType = useNewLineContext();
@@ -16,7 +17,10 @@ export default function EditPaths({ stops }: { stops: Stop[] }) {
     const endStops = paths.map(p => stops.find(s => s.id == p.endId) ?? stops[0]);
     const router = useRouter();
 
-    console.log(context.data);
+    useEffect(() => {
+        if(context.data.line == null || context.data.paths == null)
+            router.replace('/new-line/create');
+    }, [context]);
 
     function onCreate() {
         const onSubmitPromise = new Promise(async (resolve, reject) => {
@@ -43,7 +47,7 @@ export default function EditPaths({ stops }: { stops: Stop[] }) {
                 success: (line: any) => `Created line ${line?.name}`,
                 error: (e) => `Failed to create line: ${e}`,
             }
-        )
+        );
     }
 
     return (
