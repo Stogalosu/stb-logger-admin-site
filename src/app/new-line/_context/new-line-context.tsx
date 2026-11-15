@@ -1,11 +1,34 @@
 'use client';
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode, useEffect } from "react";
 
 const NewLineContext = createContext<NewLineContextType | null>(null);
 
 export function NewLineProvider({ children }: { children: React.ReactNode }) {
     const [data, setData] = useState<NewLineData>({ line: null, paths: null });
+    const [isInitialized, setIsInitialized] = useState(false);
+
+    useEffect(() => {
+        const savedData = localStorage.getItem('new-line-context-data');
+        if(savedData)
+            try {
+                setData(JSON.parse(savedData));
+            } catch {
+                console.log('Failed to parse saved wizard data!');
+            }
+        setIsInitialized(true);
+    }, []);
+
+    useEffect(() => {
+        if(isInitialized)
+            localStorage.setItem('new-line-context-data', JSON.stringify(data));
+    }, [data, isInitialized]);
+
+    const clearCache = () => {
+        localStorage.removeItem('new-line-context-data');
+        setData({ line: null, paths: null });
+    };
+
     return (
         <NewLineContext value={{ data, setData }}>
             { children }

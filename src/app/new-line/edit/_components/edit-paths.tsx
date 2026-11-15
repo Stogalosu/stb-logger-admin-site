@@ -26,6 +26,9 @@ export default function EditPaths({ stops }: { stops: Stop[] }) {
                     reject(new Error(result.error));
                     return;
                 }
+
+                context.clearCache();
+
                 router.push(`/?lineId=${context.data.line!!.id}`);
                 resolve(context.data.line!!);
             } catch (error) {

@@ -1,6 +1,5 @@
 import EditPaths from "./_components/edit-paths";
 import { getStops } from "@/actions/stops";
-import { LineMap } from "@/components/line-map";
 
 export default async function EditNewLine() {
     const stops = await getStops();

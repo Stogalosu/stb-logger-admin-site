@@ -37,4 +37,5 @@ interface NewLineData {
 interface NewLineContextType {
     data: NewLineData;
     setData: (data: NewLineData) => void;
+    clearCache: () => void;
 }
