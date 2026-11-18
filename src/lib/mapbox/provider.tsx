@@ -47,15 +47,15 @@ export default function MapProvider({ mapContainerRef, initialViewState, childre
     }, [initialViewState, mapContainerRef]);
 
     return (
-        <div className="z-[1000]">
+        <>
             <MapContext value={{ map: map.current! }}>
                 {children}
             </MapContext>
             {!loaded && (
-                <div className="absolute inset-0 flex items-center justify-center bg-background/80 z-[1000]">
+                <div className="absolute inset-0 flex items-center justify-center bg-background/80 z-10">
                     <div className="text-lg font-medium">Loading map...</div>
                 </div>
             )}
-        </div>
+        </>
     );
 }
