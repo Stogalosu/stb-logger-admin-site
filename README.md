@@ -1,5 +1,13 @@
 # STB Logger Admin Site
 
+## For Crossroads reviewers
+
+What has changed? Well, not as much as I hoped. I wanted to ship before the deadline but didn't have that much time to make changes. Changes are:
+- Changed design of line edit wizard (after entering details of the new line).
+- Added caching to that page so that unfinished lines are not lost.
+- Added redirect when trying to access /new-line/edit without having completed the initial form.
+- Revamped line and stop fetching by adding cache.
+
 ## What is this?
 A website to more easily input and manage public transport lines' routes and map representations for use in my Android app, STB Logger. Users can create lines by uploading a zip with GPX files representing the route the bus takes between every two stops.
 
@@ -41,6 +49,14 @@ I used AI for debugging and sometimes for giving me ideas on how to implement so
 
 ## Screenshots
 <img width="1507" height="826" alt="Screenshot 2026-09-11 at 22 06 17" src="https://github.com/user-attachments/assets/57052e19-00f3-4c9c-8366-eaee914df68b" />
-<img width="1510" height="826" alt="Screenshot 2026-09-11 at 22 06 29" src="https://github.com/user-attachments/assets/5bd62c5d-8091-4240-97c8-c2a988cadd8c" />
 <img width="1512" height="824" alt="Screenshot 2026-09-11 at 22 06 39" src="https://github.com/user-attachments/assets/e81af966-5eed-40c9-864f-1dc5df569357" />
+
+Old version:
+
+<img width="1510" height="826" alt="Screenshot 2026-09-11 at 22 06 29" src="https://github.com/user-attachments/assets/5bd62c5d-8091-4240-97c8-c2a988cadd8c" />
 <img width="1512" height="823" alt="Screenshot 2026-09-11 at 22 07 22" src="https://github.com/user-attachments/assets/0c6bc7af-55b8-4e43-b352-bec343f17b6d" />
+
+New version:
+
+<img width="1512" height="824" alt="image" src="https://github.com/user-attachments/assets/53d741de-19d9-4030-a1db-67e5629b3cdc" />
+<img width="1512" height="824" alt="image" src="https://github.com/user-attachments/assets/ac2fadf7-6fc5-425e-8840-885f70c58e1d" />
