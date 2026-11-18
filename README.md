@@ -7,6 +7,7 @@ What has changed? Well, not as much as I hoped. I wanted to ship before the dead
 - Added caching to that page so that unfinished lines are not lost.
 - Added redirect when trying to access /new-line/edit without having completed the initial form.
 - Revamped line and stop fetching by adding cache.
+- Redesigned line preview page: added details and a temporary map that displays a fixed set of data for now.
 
 ## What is this?
 A website to more easily input and manage public transport lines' routes and map representations for use in my Android app, STB Logger. Users can create lines by uploading a zip with GPX files representing the route the bus takes between every two stops.
