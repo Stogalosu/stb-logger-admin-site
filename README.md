@@ -38,7 +38,7 @@ pnpm dev
 ```
 
 ## Demo
-You can test the website here: https://stb-logger-admin-site.onrender.com
+You can test the website here: https://stb-logger-admin-site.vercel.app
 
 Please be patient, it's pretty slow. GPX processing takes about 1.5 mins.
 
