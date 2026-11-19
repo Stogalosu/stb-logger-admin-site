@@ -41,7 +41,9 @@ pnpm dev
 ## Demo
 You can test the website here: https://stb-logger-admin-site.vercel.app
 
-Please be patient, it's pretty slow. GPX processing takes about 1.5 mins.
+Please be patient, it's pretty slow.
+
+Edit page is not implemented yet, so if you click on Edit on the top bar, you will see a blank page. Also, if you press edit on a line's card, nothing will happen. I've only implemented line creation functionality for now, which also includes an editing page.
 
 You have some demo zip fies that contain real lines' GPX files which you can use to create new lines. They are located in the /demo folder.
 
