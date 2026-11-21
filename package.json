@@ -7,16 +7,20 @@
     "build": "next build",
     "start": "next start",
     "lint": "biome check",
-    "format": "biome format --write"
+    "format": "biome format --write",
+    "contract:emit": "prisma contract emit",
+    "postinstall": "prisma skills sync || exit 0"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
+    "@prisma/orm-postgres": "8.0.0-rc.24",
     "@we-gold/gpxjs": "^1.2.0",
     "adm-zip": "^0.6.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "cn": "^0.2.6",
+    "dotenv": "^18.0.10",
     "firebase": "^12.18.0",
     "firebase-tools": "^15.28.1",
     "lucide-react": "^1.34.0",
@@ -32,12 +36,14 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.2",
+    "@prisma/cli-engine": "0.10.0",
     "@tailwindcss/postcss": "^4",
     "@types/adm-zip": "^0.5.8",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "babel-plugin-react-compiler": "1.0.0",
+    "prisma": "8.0.0-rc.34",
     "tailwindcss": "^4",
     "typescript": "^5"
   },

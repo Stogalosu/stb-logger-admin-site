@@ -1,6 +1,10 @@
 allowBuilds:
   '@firebase/util': true
+  esbuild: true
   protobufjs: true
   re2: true
   sharp: false
   unrs-resolver: false
+permissions:
+  '@prisma/orm-postgres':
+    skills: true
