@@ -25,7 +25,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'2234e7600955899d757564098645a375cc012992258e9823157fcc6f976f4a3c'>;
+  StorageHashBase<'8564db97b78b4bb2f082066a6dd55eb3467121b05374c512a0389845cd752ac7'>;
 export type ExecutionHash =
   ExecutionHashBase<'78c40cb7d1b14a230e81ef226aff78bbf7815fceed957223a6c4c4d4567a9b48'>;
 export type ProfileHash =
@@ -278,7 +278,18 @@ type DefaultLiteralValue<CodecId extends string, Encoded> = CodecId extends keyo
   : Encoded;
 type ParameterizedOutputTypeFunctions = PgParameterizedOutputTypes;
 
-type FieldTypeOverrides = {};
+type FieldTypeOverrides = {
+  readonly public: {
+    readonly models: {
+      readonly Line: {
+        readonly type: {
+          readonly output: 'tram' | 'trolleybus' | 'bus' | 'night-bus' | 'subway';
+          readonly input: 'tram' | 'trolleybus' | 'bus' | 'night-bus' | 'subway';
+        };
+      };
+    };
+  };
+};
 export type FieldOutputTypes = FieldTypesFromDomain<
   ContractBase['domain']['namespaces'],
   CodecTypes,
@@ -295,7 +306,16 @@ export type FieldInputTypes = FieldTypesFromDomain<
   'input',
   ContractBase['storage']['namespaces']
 >;
-type ColumnTypeOverrides = {};
+type ColumnTypeOverrides = {
+  readonly public: {
+    readonly lines: {
+      readonly type: {
+        readonly output: 'tram' | 'trolleybus' | 'bus' | 'night-bus' | 'subway';
+        readonly input: 'tram' | 'trolleybus' | 'bus' | 'night-bus' | 'subway';
+      };
+    };
+  };
+};
 export type StorageColumnTypes = ColumnTypesFromStorage<
   ContractBase['storage'],
   CodecTypes,
@@ -329,7 +349,7 @@ export namespace Models {
     fraction: FieldOutputTypes['public']['RouteStop']['fraction'];
     sequence: FieldOutputTypes['public']['RouteStop']['sequence'];
     stopId: FieldOutputTypes['public']['RouteStop']['stopId'];
-    variandId: FieldOutputTypes['public']['RouteStop']['variandId'];
+    variantId: FieldOutputTypes['public']['RouteStop']['variantId'];
     stop: public_Stop;
     variant: public_RouteVariant;
     readonly [RelationKeys]?: 'stop' | 'variant';
@@ -337,9 +357,9 @@ export namespace Models {
   export type public_RouteVariant = {
     direction: FieldOutputTypes['public']['RouteVariant']['direction'];
     id: FieldOutputTypes['public']['RouteVariant']['id'];
+    lineId: FieldOutputTypes['public']['RouteVariant']['lineId'];
     name: FieldOutputTypes['public']['RouteVariant']['name'];
     path: FieldOutputTypes['public']['RouteVariant']['path'];
-    routeId: FieldOutputTypes['public']['RouteVariant']['routeId'];
     scheduleType: FieldOutputTypes['public']['RouteVariant']['scheduleType'];
     line: public_Line;
     stops: public_RouteStop[];
@@ -461,14 +481,14 @@ type ContractBase = Omit<
                   readonly nullable: false;
                   readonly many: false;
                 };
-                readonly variandId: {
+                readonly variantId: {
                   readonly dataType: 'pg/int4';
                   readonly codecId: 'pg/int4@1';
                   readonly nullable: false;
                   readonly many: false;
                 };
               };
-              primaryKey: { readonly columns: readonly ['variandId', 'sequence'] };
+              primaryKey: { readonly columns: readonly ['variantId', 'sequence'] };
               uniques: readonly [];
               indexes: readonly [
                 {
@@ -478,9 +498,9 @@ type ContractBase = Omit<
                   readonly unique: false;
                 },
                 {
-                  readonly name: 'route_stop_variandId_idx_e7652df5';
-                  readonly prefix: 'route_stop_variandId_idx';
-                  readonly columns: readonly ['variandId'];
+                  readonly name: 'route_stop_variantId_idx_e16bb45d';
+                  readonly prefix: 'route_stop_variantId_idx';
+                  readonly columns: readonly ['variantId'];
                   readonly unique: false;
                 },
               ];
@@ -489,7 +509,7 @@ type ContractBase = Omit<
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
                     readonly tableName: 'route_stop';
-                    readonly columns: readonly ['variandId'];
+                    readonly columns: readonly ['variantId'];
                   };
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
@@ -529,6 +549,12 @@ type ContractBase = Omit<
                   };
                   readonly many: false;
                 };
+                readonly lineId: {
+                  readonly dataType: 'pg/int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
                 readonly name: {
                   readonly dataType: 'pg/text';
                   readonly codecId: 'pg/text@1';
@@ -542,12 +568,6 @@ type ContractBase = Omit<
                   readonly typeParams: { readonly srid: 4326 };
                   readonly many: false;
                 };
-                readonly routeId: {
-                  readonly dataType: 'pg/int4';
-                  readonly codecId: 'pg/int4@1';
-                  readonly nullable: false;
-                  readonly many: false;
-                };
                 readonly scheduleType: {
                   readonly dataType: 'pg/text';
                   readonly codecId: 'pg/text@1';
@@ -559,9 +579,9 @@ type ContractBase = Omit<
               uniques: readonly [];
               indexes: readonly [
                 {
-                  readonly name: 'route_variants_routeId_idx_91ae2fd6';
-                  readonly prefix: 'route_variants_routeId_idx';
-                  readonly columns: readonly ['routeId'];
+                  readonly name: 'route_variants_lineId_idx_4b6c5a21';
+                  readonly prefix: 'route_variants_lineId_idx';
+                  readonly columns: readonly ['lineId'];
                   readonly unique: false;
                 },
               ];
@@ -570,7 +590,7 @@ type ContractBase = Omit<
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
                     readonly tableName: 'route_variants';
-                    readonly columns: readonly ['routeId'];
+                    readonly columns: readonly ['lineId'];
                   };
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
@@ -624,6 +644,12 @@ type ContractBase = Omit<
               foreignKeys: readonly [];
             };
           };
+          readonly valueSet: {
+            readonly LineType: {
+              readonly kind: 'valueSet';
+              readonly values: readonly ['tram', 'trolleybus', 'bus', 'night-bus', 'subway'];
+            };
+          };
         };
       };
     };
@@ -674,7 +700,7 @@ type ContractBase = Omit<
                 readonly cardinality: '1:N';
                 readonly on: {
                   readonly localFields: readonly ['id'];
-                  readonly targetFields: readonly ['routeId'];
+                  readonly targetFields: readonly ['lineId'];
                 };
               };
             };
@@ -732,7 +758,7 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
               };
-              readonly variandId: {
+              readonly variantId: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
               };
@@ -755,7 +781,7 @@ type ContractBase = Omit<
                 readonly cardinality: 'N:1';
                 readonly nullable: false;
                 readonly on: {
-                  readonly localFields: readonly ['variandId'];
+                  readonly localFields: readonly ['variantId'];
                   readonly targetFields: readonly ['id'];
                 };
               };
@@ -767,7 +793,7 @@ type ContractBase = Omit<
                 readonly fraction: { readonly column: 'fraction' };
                 readonly sequence: { readonly column: 'sequence' };
                 readonly stopId: { readonly column: 'stopId' };
-                readonly variandId: { readonly column: 'variandId' };
+                readonly variantId: { readonly column: 'variantId' };
               };
             };
           };
@@ -778,6 +804,10 @@ type ContractBase = Omit<
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly lineId: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
               };
@@ -793,10 +823,6 @@ type ContractBase = Omit<
                   readonly typeParams: { readonly srid: 4326 };
                 };
               };
-              readonly routeId: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
-              };
               readonly scheduleType: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
@@ -808,7 +834,7 @@ type ContractBase = Omit<
                 readonly cardinality: 'N:1';
                 readonly nullable: false;
                 readonly on: {
-                  readonly localFields: readonly ['routeId'];
+                  readonly localFields: readonly ['lineId'];
                   readonly targetFields: readonly ['id'];
                 };
               };
@@ -820,7 +846,7 @@ type ContractBase = Omit<
                 readonly cardinality: '1:N';
                 readonly on: {
                   readonly localFields: readonly ['id'];
-                  readonly targetFields: readonly ['variandId'];
+                  readonly targetFields: readonly ['variantId'];
                 };
               };
             };
@@ -830,9 +856,9 @@ type ContractBase = Omit<
               readonly fields: {
                 readonly direction: { readonly column: 'direction' };
                 readonly id: { readonly column: 'id' };
+                readonly lineId: { readonly column: 'lineId' };
                 readonly name: { readonly column: 'name' };
                 readonly path: { readonly column: 'path' };
-                readonly routeId: { readonly column: 'routeId' };
                 readonly scheduleType: { readonly column: 'scheduleType' };
               };
             };
@@ -889,6 +915,27 @@ type ContractBase = Omit<
               };
             };
           };
+        };
+        readonly enum: {
+          readonly LineType: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'Tram'; readonly value: 'tram' },
+              { readonly name: 'Trolleybus'; readonly value: 'trolleybus' },
+              { readonly name: 'Bus'; readonly value: 'bus' },
+              { readonly name: 'NightBus'; readonly value: 'night-bus' },
+              { readonly name: 'Subway'; readonly value: 'subway' },
+            ];
+          };
+        };
+        readonly enumMemberTypes?: {
+          readonly LineType: readonly [
+            { readonly name: 'Tram'; readonly value: 'tram' },
+            { readonly name: 'Trolleybus'; readonly value: 'trolleybus' },
+            { readonly name: 'Bus'; readonly value: 'bus' },
+            { readonly name: 'NightBus'; readonly value: 'night-bus' },
+            { readonly name: 'Subway'; readonly value: 'subway' },
+          ];
         };
       };
     };

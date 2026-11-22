@@ -28,6 +28,33 @@
   "domain": {
     "namespaces": {
       "public": {
+        "enum": {
+          "LineType": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "Tram",
+                "value": "tram"
+              },
+              {
+                "name": "Trolleybus",
+                "value": "trolleybus"
+              },
+              {
+                "name": "Bus",
+                "value": "bus"
+              },
+              {
+                "name": "NightBus",
+                "value": "night-bus"
+              },
+              {
+                "name": "Subway",
+                "value": "subway"
+              }
+            ]
+          }
+        },
         "models": {
           "Line": {
             "fields": {
@@ -50,6 +77,12 @@
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "LineType",
+                  "namespaceId": "public",
+                  "plane": "domain"
                 }
               }
             },
@@ -61,7 +94,7 @@
                     "id"
                   ],
                   "targetFields": [
-                    "routeId"
+                    "lineId"
                   ]
                 },
                 "to": {
@@ -153,7 +186,7 @@
                   "kind": "scalar"
                 }
               },
-              "variandId": {
+              "variantId": {
                 "nullable": false,
                 "type": {
                   "codecId": "pg/int4@1",
@@ -183,7 +216,7 @@
                 "nullable": false,
                 "on": {
                   "localFields": [
-                    "variandId"
+                    "variantId"
                   ],
                   "targetFields": [
                     "id"
@@ -206,8 +239,8 @@
                 "stopId": {
                   "column": "stopId"
                 },
-                "variandId": {
-                  "column": "variandId"
+                "variantId": {
+                  "column": "variantId"
                 }
               },
               "namespaceId": "public",
@@ -224,6 +257,13 @@
                 }
               },
               "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "lineId": {
                 "nullable": false,
                 "type": {
                   "codecId": "pg/int4@1",
@@ -247,13 +287,6 @@
                   }
                 }
               },
-              "routeId": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/int4@1",
-                  "kind": "scalar"
-                }
-              },
               "scheduleType": {
                 "nullable": false,
                 "type": {
@@ -268,7 +301,7 @@
                 "nullable": false,
                 "on": {
                   "localFields": [
-                    "routeId"
+                    "lineId"
                   ],
                   "targetFields": [
                     "id"
@@ -286,7 +319,7 @@
                     "id"
                   ],
                   "targetFields": [
-                    "variandId"
+                    "variantId"
                   ]
                 },
                 "to": {
@@ -303,14 +336,14 @@
                 "id": {
                   "column": "id"
                 },
+                "lineId": {
+                  "column": "lineId"
+                },
                 "name": {
                   "column": "name"
                 },
                 "path": {
                   "column": "path"
-                },
-                "routeId": {
-                  "column": "routeId"
                 },
                 "scheduleType": {
                   "column": "scheduleType"
@@ -410,6 +443,13 @@
         "entries": {
           "table": {
             "lines": {
+              "checks": [
+                {
+                  "expression": "\"type\" IN ('tram', 'trolleybus', 'bus', 'night-bus', 'subway')",
+                  "name": "lines_type_check_18a48159",
+                  "prefix": "lines_type_check"
+                }
+              ],
               "columns": {
                 "id": {
                   "codecId": "pg/int4@1",
@@ -428,7 +468,13 @@
                 "type": {
                   "codecId": "pg/text@1",
                   "dataType": "pg/text",
-                  "nullable": false
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "LineType",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
                 }
               },
               "foreignKeys": [],
@@ -487,7 +533,7 @@
                   "dataType": "pg/int4",
                   "nullable": false
                 },
-                "variandId": {
+                "variantId": {
                   "codecId": "pg/int4@1",
                   "dataType": "pg/int4",
                   "nullable": false
@@ -496,11 +542,11 @@
               "foreignKeys": [
                 {
                   "index": {
-                    "name": "route_stop_variandId_idx_e7652df5"
+                    "name": "route_stop_variantId_idx_e16bb45d"
                   },
                   "source": {
                     "columns": [
-                      "variandId"
+                      "variantId"
                     ],
                     "namespaceId": "public",
                     "tableName": "route_stop"
@@ -544,16 +590,16 @@
                 },
                 {
                   "columns": [
-                    "variandId"
+                    "variantId"
                   ],
-                  "name": "route_stop_variandId_idx_e7652df5",
-                  "prefix": "route_stop_variandId_idx",
+                  "name": "route_stop_variantId_idx_e16bb45d",
+                  "prefix": "route_stop_variantId_idx",
                   "unique": false
                 }
               ],
               "primaryKey": {
                 "columns": [
-                  "variandId",
+                  "variantId",
                   "sequence"
                 ]
               },
@@ -575,6 +621,11 @@
                   },
                   "nullable": false
                 },
+                "lineId": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "nullable": false
+                },
                 "name": {
                   "codecId": "pg/text@1",
                   "dataType": "pg/text",
@@ -588,11 +639,6 @@
                     "srid": 4326
                   }
                 },
-                "routeId": {
-                  "codecId": "pg/int4@1",
-                  "dataType": "pg/int4",
-                  "nullable": false
-                },
                 "scheduleType": {
                   "codecId": "pg/text@1",
                   "dataType": "pg/text",
@@ -602,11 +648,11 @@
               "foreignKeys": [
                 {
                   "index": {
-                    "name": "route_variants_routeId_idx_91ae2fd6"
+                    "name": "route_variants_lineId_idx_4b6c5a21"
                   },
                   "source": {
                     "columns": [
-                      "routeId"
+                      "lineId"
                     ],
                     "namespaceId": "public",
                     "tableName": "route_variants"
@@ -623,10 +669,10 @@
               "indexes": [
                 {
                   "columns": [
-                    "routeId"
+                    "lineId"
                   ],
-                  "name": "route_variants_routeId_idx_91ae2fd6",
-                  "prefix": "route_variants_routeId_idx",
+                  "name": "route_variants_lineId_idx_4b6c5a21",
+                  "prefix": "route_variants_lineId_idx",
                   "unique": false
                 }
               ],
@@ -681,13 +727,25 @@
               },
               "uniques": []
             }
+          },
+          "valueSet": {
+            "LineType": {
+              "kind": "valueSet",
+              "values": [
+                "tram",
+                "trolleybus",
+                "bus",
+                "night-bus",
+                "subway"
+              ]
+            }
           }
         },
         "id": "public",
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "2234e7600955899d757564098645a375cc012992258e9823157fcc6f976f4a3c"
+    "storageHash": "8564db97b78b4bb2f082066a6dd55eb3467121b05374c512a0389845cd752ac7"
   },
   "execution": {
     "executionHash": "78c40cb7d1b14a230e81ef226aff78bbf7815fceed957223a6c4c4d4567a9b48",

@@ -1,5 +1,13 @@
 // use prisma-8
 
+enum LineType {
+  Tram       = "tram"
+  Trolleybus = "trolleybus"
+  Bus        = "bus"
+  NightBus   = "night-bus"
+  Subway     = "subway"
+}
+
 types {
   Geometry = postgis.Geometry(4326)
 }
@@ -7,7 +15,7 @@ types {
 model Line {
   id   Int    @id @default(autoincrement())
   name String
-  type String
+  type LineType
 
   variants RouteVariant[]
 
@@ -16,13 +24,13 @@ model Line {
 
 model RouteVariant {
   id           Int      @id @default(autoincrement())
-  routeId      Int
+  lineId      Int
   direction    String
   name         String
   scheduleType String
   path         Geometry
 
-  line  Line        @relation(fields: [routeId], references: [id])
+  line  Line        @relation(fields: [lineId], references: [id])
   stops RouteStop[]
 
   @@map("route_variants")
@@ -41,15 +49,15 @@ model Stop {
 }
 
 model RouteStop {
-  variandId Int
+  variantId Int
   stopId    Int
   sequence  Int
   fraction  Float
 
-  variant RouteVariant @relation(fields: [variandId], references: [id])
+  variant RouteVariant @relation(fields: [variantId], references: [id])
   stop    Stop         @relation(fields: [stopId], references: [id])
 
-  @@id([variandId, sequence])
+  @@id([variantId, sequence])
   @@map("route_stop")
 }
 
