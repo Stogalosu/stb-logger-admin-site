@@ -4,8 +4,20 @@
   "target": "postgres",
   "profileHash": "3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2",
   "roots": {
-    "User": {
-      "model": "User",
+    "lines": {
+      "model": "Line",
+      "namespace": "public"
+    },
+    "route_stop": {
+      "model": "RouteStop",
+      "namespace": "public"
+    },
+    "route_variants": {
+      "model": "RouteVariant",
+      "namespace": "public"
+    },
+    "stops": {
+      "model": "Stop",
       "namespace": "public"
     }
   },
@@ -13,9 +25,150 @@
     "namespaces": {
       "public": {
         "models": {
-          "User": {
+          "Line": {
             "fields": {
-              "email": {
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "name": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "type": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "variants": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "routeId"
+                  ]
+                },
+                "to": {
+                  "model": "RouteVariant",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "id": {
+                  "column": "id"
+                },
+                "name": {
+                  "column": "name"
+                },
+                "type": {
+                  "column": "type"
+                }
+              },
+              "namespaceId": "public",
+              "table": "lines"
+            }
+          },
+          "RouteStop": {
+            "fields": {
+              "fraction": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/float8@1",
+                  "kind": "scalar"
+                }
+              },
+              "sequence": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "stopId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "variandId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "stop": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "stopId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Stop",
+                  "namespace": "public"
+                }
+              },
+              "variant": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "variandId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "RouteVariant",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "fraction": {
+                  "column": "fraction"
+                },
+                "sequence": {
+                  "column": "sequence"
+                },
+                "stopId": {
+                  "column": "stopId"
+                },
+                "variandId": {
+                  "column": "variandId"
+                }
+              },
+              "namespaceId": "public",
+              "table": "route_stop"
+            }
+          },
+          "RouteVariant": {
+            "fields": {
+              "direction": {
                 "nullable": false,
                 "type": {
                   "codecId": "pg/text@1",
@@ -30,28 +183,173 @@
                 }
               },
               "name": {
-                "nullable": true,
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "path": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/geometry@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "srid": 4326
+                  }
+                }
+              },
+              "routeId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "scheduleType": {
+                "nullable": false,
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               }
             },
-            "relations": {},
+            "relations": {
+              "line": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "routeId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Line",
+                  "namespace": "public"
+                }
+              },
+              "stops": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "variandId"
+                  ]
+                },
+                "to": {
+                  "model": "RouteStop",
+                  "namespace": "public"
+                }
+              }
+            },
             "storage": {
               "fields": {
-                "email": {
-                  "column": "email"
+                "direction": {
+                  "column": "direction"
                 },
                 "id": {
                   "column": "id"
                 },
                 "name": {
                   "column": "name"
+                },
+                "path": {
+                  "column": "path"
+                },
+                "routeId": {
+                  "column": "routeId"
+                },
+                "scheduleType": {
+                  "column": "scheduleType"
                 }
               },
               "namespaceId": "public",
-              "table": "User"
+              "table": "route_variants"
+            }
+          },
+          "Stop": {
+            "fields": {
+              "description": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "location": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/geometry@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "srid": 4326
+                  }
+                }
+              },
+              "name": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "underground": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "routes": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "stopId"
+                  ]
+                },
+                "to": {
+                  "model": "RouteStop",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "description": {
+                  "column": "description"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "location": {
+                  "column": "location"
+                },
+                "name": {
+                  "column": "name"
+                },
+                "underground": {
+                  "column": "underground"
+                }
+              },
+              "namespaceId": "public",
+              "table": "stops"
             }
           }
         }
@@ -63,9 +361,129 @@
       "public": {
         "entries": {
           "table": {
-            "User": {
+            "lines": {
               "columns": {
-                "email": {
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nullable": false
+                },
+                "name": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "type": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
+            },
+            "route_stop": {
+              "columns": {
+                "fraction": {
+                  "codecId": "pg/float8@1",
+                  "dataType": "pg/float8",
+                  "nullable": false
+                },
+                "sequence": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "nullable": false
+                },
+                "stopId": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "nullable": false
+                },
+                "variandId": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "index": {
+                    "name": "route_stop_variandId_idx_e7652df5"
+                  },
+                  "source": {
+                    "columns": [
+                      "variandId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "route_stop"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "route_variants"
+                  }
+                },
+                {
+                  "index": {
+                    "name": "route_stop_stopId_idx_8804d4e7"
+                  },
+                  "source": {
+                    "columns": [
+                      "stopId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "route_stop"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "stops"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "stopId"
+                  ],
+                  "name": "route_stop_stopId_idx_8804d4e7",
+                  "prefix": "route_stop_stopId_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "variandId"
+                  ],
+                  "name": "route_stop_variandId_idx_e7652df5",
+                  "prefix": "route_stop_variandId_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "variandId",
+                  "sequence"
+                ]
+              },
+              "uniques": []
+            },
+            "route_variants": {
+              "columns": {
+                "direction": {
                   "codecId": "pg/text@1",
                   "dataType": "pg/text",
                   "nullable": false
@@ -82,7 +500,98 @@
                 "name": {
                   "codecId": "pg/text@1",
                   "dataType": "pg/text",
+                  "nullable": false
+                },
+                "path": {
+                  "codecId": "pg/geometry@1",
+                  "dataType": "postgis/geometry",
+                  "nullable": false,
+                  "typeParams": {
+                    "srid": 4326
+                  }
+                },
+                "routeId": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "nullable": false
+                },
+                "scheduleType": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "index": {
+                    "name": "route_variants_routeId_idx_91ae2fd6"
+                  },
+                  "source": {
+                    "columns": [
+                      "routeId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "route_variants"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "lines"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "routeId"
+                  ],
+                  "name": "route_variants_routeId_idx_91ae2fd6",
+                  "prefix": "route_variants_routeId_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
+            },
+            "stops": {
+              "columns": {
+                "description": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
                   "nullable": true
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nullable": false
+                },
+                "location": {
+                  "codecId": "pg/geometry@1",
+                  "dataType": "postgis/geometry",
+                  "nullable": false,
+                  "typeParams": {
+                    "srid": 4326
+                  }
+                },
+                "name": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "underground": {
+                  "codecId": "pg/bool@1",
+                  "dataType": "pg/bool",
+                  "nullable": false
                 }
               },
               "foreignKeys": [],
@@ -92,13 +601,7 @@
                   "id"
                 ]
               },
-              "uniques": [
-                {
-                  "columns": [
-                    "email"
-                  ]
-                }
-              ]
+              "uniques": []
             }
           }
         },
@@ -106,7 +609,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "a62d15a094e80be7b342d75e0538935972b9699c76dabb5339940dd50d17a889"
+    "storageHash": "0479b0c3190b4a18cd492170c2be2bf1b554c9739367559245e3be6776191f73"
   },
   "capabilities": {
     "postgres": {
@@ -117,6 +620,7 @@
       "lateral": true,
       "limit": true,
       "orderBy": true,
+      "postgis.geometry": true,
       "returning": true
     },
     "sql": {
@@ -136,7 +640,36 @@
       "scalarList": true
     }
   },
-  "extensions": {},
+  "extensions": {
+    "postgis": {
+      "capabilities": {
+        "postgres": {
+          "postgis.geometry": true
+        }
+      },
+      "familyId": "sql",
+      "id": "postgis",
+      "kind": "extension",
+      "targetId": "postgres",
+      "types": {
+        "codecTypes": {
+          "import": {
+            "alias": "PostgisTypes",
+            "named": "CodecTypes",
+            "package": "@internal/extension-postgis/codec-types"
+          }
+        },
+        "queryOperationTypes": {
+          "import": {
+            "alias": "PostgisQueryOperationTypes",
+            "named": "QueryOperationTypes",
+            "package": "@internal/extension-postgis/operation-types"
+          }
+        }
+      },
+      "version": "0.0.1"
+    }
+  },
   "meta": {},
   "_generated": {
     "warning": "⚠️  GENERATED FILE - DO NOT EDIT",

@@ -1,7 +1,54 @@
 // use prisma-8
 
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+types {
+  Geometry = postgis.Geometry(4326)
+}
+
+model Line {
+  id   Int    @id @default(autoincrement())
+  name String
+  type String
+
+  variants RouteVariant[]
+
+  @@map("lines")
+}
+
+model RouteVariant {
+  id           Int        @id @default(autoincrement())
+  routeId      Int
+  direction    String
+  name         String
+  scheduleType String
+  path         Geometry
+
+  line  Line        @relation(fields: [routeId], references: [id])
+  stops RouteStop[]
+
+  @@map("route_variants")
+}
+
+model Stop {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String?
+  location    Geometry
+  underground Boolean
+
+  routes RouteStop[]
+
+  @@map("stops")
+}
+
+model RouteStop {
+  variandId Int
+  stopId    Int
+  sequence  Int
+  fraction  Float
+
+  variant RouteVariant @relation(fields: [variandId], references: [id])
+  stop    Stop         @relation(fields: [stopId], references: [id])
+
+  @@id([variandId, sequence])
+  @@map("route_stop")
 }
