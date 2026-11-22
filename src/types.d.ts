@@ -1,3 +1,5 @@
+import { Geometry } from '@prisma/orm-extension-postgis/geojson';
+
 declare enum LineType {
     Tram = "tram",
     Trolleybus = "trolleybus",
@@ -15,10 +17,9 @@ interface Line {
 interface Stop {
     id: number;
     name: string;
-    description: string;
-    latitude: number;
-    longitude: number;
-    type: number;
+    description: string | null;
+    location: Geometry;
+    underground: boolean;
 }
 
 interface Path {

@@ -14,7 +14,14 @@ const getLinesCache = (lastUpdatedTime: number) =>
 
 export async function getLines() {
     const timeNow = Math.floor(Date.now() / 1000);
-    const lastUpdatedMeta = await db.orm.public.Metadata.where({ key: 'lines_last_updated' }).first();
+    let lastUpdatedMeta = await db.orm.public.Metadata.where({ key: 'lines_last_updated' }).first();
+    if(lastUpdatedMeta == null) {
+        await db.orm.public.Metadata.create({
+            key: 'lines_last_updated',
+            value: 'success'
+        });
+        lastUpdatedMeta = await db.orm.public.Metadata.where({ key: 'lines_last_updated' }).first();
+    }
     const lastUpdatedTime = lastUpdatedMeta?.updatedAt ?? timeNow;
 
     return await getLinesCache(lastUpdatedTime);
