@@ -13,7 +13,7 @@ types {
 }
 
 model Line {
-  id   Int    @id @default(autoincrement())
+  id   Int      @id @default(autoincrement())
   name String
   type LineType
 
@@ -24,7 +24,7 @@ model Line {
 
 model RouteVariant {
   id           Int      @id @default(autoincrement())
-  lineId      Int
+  lineId       Int
   direction    String
   name         String
   scheduleType String
@@ -33,6 +33,7 @@ model RouteVariant {
   line  Line        @relation(fields: [lineId], references: [id])
   stops RouteStop[]
 
+  @@index([path], type: "gist")
   @@map("route_variants")
 }
 
@@ -45,6 +46,7 @@ model Stop {
 
   routes RouteStop[]
 
+  @@index([location], type: "gist")
   @@map("stops")
 }
 

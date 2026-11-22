@@ -674,6 +674,15 @@
                   "name": "route_variants_lineId_idx_4b6c5a21",
                   "prefix": "route_variants_lineId_idx",
                   "unique": false
+                },
+                {
+                  "columns": [
+                    "path"
+                  ],
+                  "name": "route_variants_path_idx_537d2f74",
+                  "prefix": "route_variants_path_idx",
+                  "type": "gist",
+                  "unique": false
                 }
               ],
               "primaryKey": {
@@ -719,7 +728,17 @@
                 }
               },
               "foreignKeys": [],
-              "indexes": [],
+              "indexes": [
+                {
+                  "columns": [
+                    "location"
+                  ],
+                  "name": "stops_location_idx_fb41678c",
+                  "prefix": "stops_location_idx",
+                  "type": "gist",
+                  "unique": false
+                }
+              ],
               "primaryKey": {
                 "columns": [
                   "id"
@@ -745,7 +764,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "8564db97b78b4bb2f082066a6dd55eb3467121b05374c512a0389845cd752ac7"
+    "storageHash": "8d873aa7157037f6ad8c45690bf72256324468e49713e52a0ce914822fcb21f4"
   },
   "execution": {
     "executionHash": "78c40cb7d1b14a230e81ef226aff78bbf7815fceed957223a6c4c4d4567a9b48",

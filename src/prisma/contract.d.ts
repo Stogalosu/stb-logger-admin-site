@@ -25,7 +25,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'8564db97b78b4bb2f082066a6dd55eb3467121b05374c512a0389845cd752ac7'>;
+  StorageHashBase<'8d873aa7157037f6ad8c45690bf72256324468e49713e52a0ce914822fcb21f4'>;
 export type ExecutionHash =
   ExecutionHashBase<'78c40cb7d1b14a230e81ef226aff78bbf7815fceed957223a6c4c4d4567a9b48'>;
 export type ProfileHash =
@@ -584,6 +584,13 @@ type ContractBase = Omit<
                   readonly columns: readonly ['lineId'];
                   readonly unique: false;
                 },
+                {
+                  readonly name: 'route_variants_path_idx_537d2f74';
+                  readonly prefix: 'route_variants_path_idx';
+                  readonly columns: readonly ['path'];
+                  readonly unique: false;
+                  readonly type: 'gist';
+                },
               ];
               foreignKeys: readonly [
                 {
@@ -640,7 +647,15 @@ type ContractBase = Omit<
               };
               primaryKey: { readonly columns: readonly ['id'] };
               uniques: readonly [];
-              indexes: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'stops_location_idx_fb41678c';
+                  readonly prefix: 'stops_location_idx';
+                  readonly columns: readonly ['location'];
+                  readonly unique: false;
+                  readonly type: 'gist';
+                },
+              ];
               foreignKeys: readonly [];
             };
           };

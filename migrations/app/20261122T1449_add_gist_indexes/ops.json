@@ -1,0 +1,98 @@
+[
+  {
+    "id": "index.route_variants.route_variants_path_idx_537d2f74",
+    "label": "Create index \"route_variants_path_idx_537d2f74\" on \"route_variants\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "route_variants_path_idx_537d2f74",
+        "table": "route_variants"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"route_variants_path_idx_537d2f74\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"route_variants_path_idx_537d2f74\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "index \"route_variants_path_idx_537d2f74\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"route_variants_path_idx_537d2f74\"",
+        "sql": "CREATE INDEX \"route_variants_path_idx_537d2f74\" ON \"public\".\"route_variants\" USING \"gist\" (\"path\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"route_variants_path_idx_537d2f74\" exists on \"route_variants\" with the planned definition",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" INNER JOIN \"pg_index\" AS \"i\" ON \"i\".\"indexrelid\" = \"c\".\"oid\" INNER JOIN \"pg_am\" AS \"m\" ON \"m\".\"oid\" = \"c\".\"relam\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3) AND \"i\".\"indrelid\" = to_regclass($4) AND NOT (\"i\".\"indisunique\") AND \"m\".\"amname\" = $5 AND (\"i\".\"indexprs\" IS NULL AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"i\".\"indkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"i\".\"indrelid\" AND key_attribute.attnum = key_column.attnum) = ($6)::jsonb) AND \"i\".\"indpred\" IS NULL)) AS \"result\"",
+        "params": [
+          "\"public\".\"route_variants_path_idx_537d2f74\"",
+          "i",
+          "I",
+          "\"public\".\"route_variants\"",
+          "gist",
+          "[\"path\"]"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.stops.stops_location_idx_fb41678c",
+    "label": "Create index \"stops_location_idx_fb41678c\" on \"stops\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "stops_location_idx_fb41678c",
+        "table": "stops"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"stops_location_idx_fb41678c\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"stops_location_idx_fb41678c\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "index \"stops_location_idx_fb41678c\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"stops_location_idx_fb41678c\"",
+        "sql": "CREATE INDEX \"stops_location_idx_fb41678c\" ON \"public\".\"stops\" USING \"gist\" (\"location\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"stops_location_idx_fb41678c\" exists on \"stops\" with the planned definition",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" INNER JOIN \"pg_index\" AS \"i\" ON \"i\".\"indexrelid\" = \"c\".\"oid\" INNER JOIN \"pg_am\" AS \"m\" ON \"m\".\"oid\" = \"c\".\"relam\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3) AND \"i\".\"indrelid\" = to_regclass($4) AND NOT (\"i\".\"indisunique\") AND \"m\".\"amname\" = $5 AND (\"i\".\"indexprs\" IS NULL AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"i\".\"indkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"i\".\"indrelid\" AND key_attribute.attnum = key_column.attnum) = ($6)::jsonb) AND \"i\".\"indpred\" IS NULL)) AS \"result\"",
+        "params": [
+          "\"public\".\"stops_location_idx_fb41678c\"",
+          "i",
+          "I",
+          "\"public\".\"stops\"",
+          "gist",
+          "[\"location\"]"
+        ]
+      }
+    ]
+  }
+]
