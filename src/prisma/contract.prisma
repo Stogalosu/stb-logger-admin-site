@@ -15,7 +15,7 @@ model Line {
 }
 
 model RouteVariant {
-  id           Int        @id @default(autoincrement())
+  id           Int      @id @default(autoincrement())
   routeId      Int
   direction    String
   name         String
@@ -29,7 +29,7 @@ model RouteVariant {
 }
 
 model Stop {
-  id          Int     @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   name        String
   description String?
   location    Geometry
@@ -51,4 +51,12 @@ model RouteStop {
 
   @@id([variandId, sequence])
   @@map("route_stop")
+}
+
+model Metadata {
+  key       String   @id
+  value     String
+  updatedAt DateTime @onCreate(now()) @onUpdate(now())
+
+  @@map("metadata")
 }

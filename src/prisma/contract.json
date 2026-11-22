@@ -8,6 +8,10 @@
       "model": "Line",
       "namespace": "public"
     },
+    "metadata": {
+      "model": "Metadata",
+      "namespace": "public"
+    },
     "route_stop": {
       "model": "RouteStop",
       "namespace": "public"
@@ -80,6 +84,50 @@
               },
               "namespaceId": "public",
               "table": "lines"
+            }
+          },
+          "Metadata": {
+            "fields": {
+              "key": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "updatedAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "precision": 3
+                  }
+                }
+              },
+              "value": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {},
+            "storage": {
+              "fields": {
+                "key": {
+                  "column": "key"
+                },
+                "updatedAt": {
+                  "column": "updatedAt"
+                },
+                "value": {
+                  "column": "value"
+                }
+              },
+              "namespaceId": "public",
+              "table": "metadata"
             }
           },
           "RouteStop": {
@@ -392,6 +440,36 @@
               },
               "uniques": []
             },
+            "metadata": {
+              "columns": {
+                "key": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "updatedAt": {
+                  "codecId": "pg/timestamptz-date@1",
+                  "dataType": "pg/timestamptz",
+                  "nullable": false,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "value": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "key"
+                ]
+              },
+              "uniques": []
+            },
             "route_stop": {
               "columns": {
                 "fraction": {
@@ -609,7 +687,35 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "0479b0c3190b4a18cd492170c2be2bf1b554c9739367559245e3be6776191f73"
+    "storageHash": "2234e7600955899d757564098645a375cc012992258e9823157fcc6f976f4a3c"
+  },
+  "execution": {
+    "executionHash": "78c40cb7d1b14a230e81ef226aff78bbf7815fceed957223a6c4c4d4567a9b48",
+    "mutations": {
+      "defaults": [
+        {
+          "onCreate": {
+            "id": "timestampNow",
+            "kind": "generator",
+            "params": {
+              "precision": 3
+            }
+          },
+          "onUpdate": {
+            "id": "timestampNow",
+            "kind": "generator",
+            "params": {
+              "precision": 3
+            }
+          },
+          "ref": {
+            "entry": "metadata",
+            "field": "updatedAt",
+            "namespace": "public"
+          }
+        }
+      ]
+    }
   },
   "capabilities": {
     "postgres": {

@@ -25,8 +25,9 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'0479b0c3190b4a18cd492170c2be2bf1b554c9739367559245e3be6776191f73'>;
-export type ExecutionHash = ExecutionHashBase<string>;
+  StorageHashBase<'2234e7600955899d757564098645a375cc012992258e9823157fcc6f976f4a3c'>;
+export type ExecutionHash =
+  ExecutionHashBase<'78c40cb7d1b14a230e81ef226aff78bbf7815fceed957223a6c4c4d4567a9b48'>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
 
@@ -318,6 +319,12 @@ export namespace Models {
     variants: public_RouteVariant[];
     readonly [RelationKeys]?: 'variants';
   };
+  export type public_Metadata = {
+    key: FieldOutputTypes['public']['Metadata']['key'];
+    updatedAt: FieldOutputTypes['public']['Metadata']['updatedAt'];
+    value: FieldOutputTypes['public']['Metadata']['value'];
+    readonly [RelationKeys]?: never;
+  };
   export type public_RouteStop = {
     fraction: FieldOutputTypes['public']['RouteStop']['fraction'];
     sequence: FieldOutputTypes['public']['RouteStop']['sequence'];
@@ -352,6 +359,7 @@ export namespace Models {
 export declare const models: {
   public: {
     Line: Models.public_Line;
+    Metadata: Models.public_Metadata;
     RouteStop: Models.public_RouteStop;
     RouteVariant: Models.public_RouteVariant;
     Stop: Models.public_Stop;
@@ -402,6 +410,33 @@ type ContractBase = Omit<
                 };
               };
               primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [];
+              indexes: readonly [];
+              foreignKeys: readonly [];
+            };
+            readonly metadata: {
+              columns: {
+                readonly key: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly updatedAt: {
+                  readonly dataType: 'pg/timestamptz';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly precision: 3 };
+                  readonly many: false;
+                };
+                readonly value: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['key'] };
               uniques: readonly [];
               indexes: readonly [];
               foreignKeys: readonly [];
@@ -600,6 +635,7 @@ type ContractBase = Omit<
   readonly targetFamily: 'sql';
   readonly roots: {
     readonly lines: { readonly namespace: 'public' & NamespaceId; readonly model: 'Line' };
+    readonly metadata: { readonly namespace: 'public' & NamespaceId; readonly model: 'Metadata' };
     readonly route_stop: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'RouteStop';
@@ -649,6 +685,36 @@ type ContractBase = Omit<
                 readonly id: { readonly column: 'id' };
                 readonly name: { readonly column: 'name' };
                 readonly type: { readonly column: 'type' };
+              };
+            };
+          };
+          readonly Metadata: {
+            readonly fields: {
+              readonly key: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly updatedAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly typeParams: { readonly precision: 3 };
+                };
+              };
+              readonly value: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+            };
+            readonly relations: Record<string, never>;
+            readonly storage: {
+              readonly table: 'metadata';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly key: { readonly column: 'key' };
+                readonly updatedAt: { readonly column: 'updatedAt' };
+                readonly value: { readonly column: 'value' };
               };
             };
           };
@@ -880,6 +946,30 @@ type ContractBase = Omit<
         };
       };
       readonly version: '0.0.1';
+    };
+  };
+  readonly execution: {
+    readonly executionHash: ExecutionHash;
+    readonly mutations: {
+      readonly defaults: readonly [
+        {
+          readonly onCreate: {
+            readonly id: 'timestampNow';
+            readonly kind: 'generator';
+            readonly params: { readonly precision: 3 };
+          };
+          readonly onUpdate: {
+            readonly id: 'timestampNow';
+            readonly kind: 'generator';
+            readonly params: { readonly precision: 3 };
+          };
+          readonly ref: {
+            readonly entry: 'metadata';
+            readonly field: 'updatedAt';
+            readonly namespace: 'public';
+          };
+        },
+      ];
     };
   };
   readonly meta: {};

@@ -1,0 +1,515 @@
+[
+  {
+    "id": "schema.public",
+    "label": "Create schema \"public\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres"
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "Create schema \"public\"",
+        "sql": "CREATE SCHEMA IF NOT EXISTS \"public\"",
+        "params": []
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "table.lines",
+    "label": "Create table \"lines\"",
+    "summary": "Creates table \"lines\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "lines"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"lines\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"lines\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "table \"lines\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"lines\"",
+        "sql": "CREATE TABLE \"public\".\"lines\" (\n  \"id\" SERIAL NOT NULL,\n  \"name\" text NOT NULL,\n  \"type\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"lines\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3))) AS \"result\"",
+        "params": [
+          "\"public\".\"lines\"",
+          "r",
+          "p"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "table \"lines\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "table.route_stop",
+    "label": "Create table \"route_stop\"",
+    "summary": "Creates table \"route_stop\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "route_stop"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"route_stop\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"route_stop\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "table \"route_stop\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"route_stop\"",
+        "sql": "CREATE TABLE \"public\".\"route_stop\" (\n  \"fraction\" float8 NOT NULL,\n  \"sequence\" int4 NOT NULL,\n  \"stopId\" int4 NOT NULL,\n  \"variandId\" int4 NOT NULL,\n  PRIMARY KEY (\"variandId\", \"sequence\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"route_stop\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3))) AS \"result\"",
+        "params": [
+          "\"public\".\"route_stop\"",
+          "r",
+          "p"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "table \"route_stop\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "table.route_variants",
+    "label": "Create table \"route_variants\"",
+    "summary": "Creates table \"route_variants\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "route_variants"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"route_variants\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"route_variants\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "table \"route_variants\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"route_variants\"",
+        "sql": "CREATE TABLE \"public\".\"route_variants\" (\n  \"direction\" text NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"name\" text NOT NULL,\n  \"path\" geometry(Geometry,4326) NOT NULL,\n  \"routeId\" int4 NOT NULL,\n  \"scheduleType\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"route_variants\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3))) AS \"result\"",
+        "params": [
+          "\"public\".\"route_variants\"",
+          "r",
+          "p"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "table \"route_variants\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "table.stops",
+    "label": "Create table \"stops\"",
+    "summary": "Creates table \"stops\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "stops"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"stops\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"stops\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "table \"stops\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"stops\"",
+        "sql": "CREATE TABLE \"public\".\"stops\" (\n  \"description\" text,\n  \"id\" SERIAL NOT NULL,\n  \"location\" geometry(Geometry,4326) NOT NULL,\n  \"name\" text NOT NULL,\n  \"underground\" bool NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"stops\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3))) AS \"result\"",
+        "params": [
+          "\"public\".\"stops\"",
+          "r",
+          "p"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "table \"stops\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "index.route_stop.route_stop_stopId_idx_8804d4e7",
+    "label": "Create index \"route_stop_stopId_idx_8804d4e7\" on \"route_stop\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "route_stop_stopId_idx_8804d4e7",
+        "table": "route_stop"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"route_stop_stopId_idx_8804d4e7\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"route_stop_stopId_idx_8804d4e7\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "index \"route_stop_stopId_idx_8804d4e7\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"route_stop_stopId_idx_8804d4e7\"",
+        "sql": "CREATE INDEX \"route_stop_stopId_idx_8804d4e7\" ON \"public\".\"route_stop\" (\"stopId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"route_stop_stopId_idx_8804d4e7\" exists on \"route_stop\" with the planned definition",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" INNER JOIN \"pg_index\" AS \"i\" ON \"i\".\"indexrelid\" = \"c\".\"oid\" INNER JOIN \"pg_am\" AS \"m\" ON \"m\".\"oid\" = \"c\".\"relam\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3) AND \"i\".\"indrelid\" = to_regclass($4) AND NOT (\"i\".\"indisunique\") AND \"m\".\"amname\" = $5 AND (\"i\".\"indexprs\" IS NULL AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"i\".\"indkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"i\".\"indrelid\" AND key_attribute.attnum = key_column.attnum) = ($6)::jsonb) AND \"i\".\"indpred\" IS NULL)) AS \"result\"",
+        "params": [
+          "\"public\".\"route_stop_stopId_idx_8804d4e7\"",
+          "i",
+          "I",
+          "\"public\".\"route_stop\"",
+          "btree",
+          "[\"stopId\"]"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.route_stop.route_stop_variandId_idx_e7652df5",
+    "label": "Create index \"route_stop_variandId_idx_e7652df5\" on \"route_stop\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "route_stop_variandId_idx_e7652df5",
+        "table": "route_stop"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"route_stop_variandId_idx_e7652df5\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"route_stop_variandId_idx_e7652df5\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "index \"route_stop_variandId_idx_e7652df5\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"route_stop_variandId_idx_e7652df5\"",
+        "sql": "CREATE INDEX \"route_stop_variandId_idx_e7652df5\" ON \"public\".\"route_stop\" (\"variandId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"route_stop_variandId_idx_e7652df5\" exists on \"route_stop\" with the planned definition",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" INNER JOIN \"pg_index\" AS \"i\" ON \"i\".\"indexrelid\" = \"c\".\"oid\" INNER JOIN \"pg_am\" AS \"m\" ON \"m\".\"oid\" = \"c\".\"relam\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3) AND \"i\".\"indrelid\" = to_regclass($4) AND NOT (\"i\".\"indisunique\") AND \"m\".\"amname\" = $5 AND (\"i\".\"indexprs\" IS NULL AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"i\".\"indkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"i\".\"indrelid\" AND key_attribute.attnum = key_column.attnum) = ($6)::jsonb) AND \"i\".\"indpred\" IS NULL)) AS \"result\"",
+        "params": [
+          "\"public\".\"route_stop_variandId_idx_e7652df5\"",
+          "i",
+          "I",
+          "\"public\".\"route_stop\"",
+          "btree",
+          "[\"variandId\"]"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.route_variants.route_variants_routeId_idx_91ae2fd6",
+    "label": "Create index \"route_variants_routeId_idx_91ae2fd6\" on \"route_variants\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "route_variants_routeId_idx_91ae2fd6",
+        "table": "route_variants"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"route_variants_routeId_idx_91ae2fd6\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"route_variants_routeId_idx_91ae2fd6\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "index \"route_variants_routeId_idx_91ae2fd6\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"route_variants_routeId_idx_91ae2fd6\"",
+        "sql": "CREATE INDEX \"route_variants_routeId_idx_91ae2fd6\" ON \"public\".\"route_variants\" (\"routeId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"route_variants_routeId_idx_91ae2fd6\" exists on \"route_variants\" with the planned definition",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" INNER JOIN \"pg_index\" AS \"i\" ON \"i\".\"indexrelid\" = \"c\".\"oid\" INNER JOIN \"pg_am\" AS \"m\" ON \"m\".\"oid\" = \"c\".\"relam\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3) AND \"i\".\"indrelid\" = to_regclass($4) AND NOT (\"i\".\"indisunique\") AND \"m\".\"amname\" = $5 AND (\"i\".\"indexprs\" IS NULL AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"i\".\"indkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"i\".\"indrelid\" AND key_attribute.attnum = key_column.attnum) = ($6)::jsonb) AND \"i\".\"indpred\" IS NULL)) AS \"result\"",
+        "params": [
+          "\"public\".\"route_variants_routeId_idx_91ae2fd6\"",
+          "i",
+          "I",
+          "\"public\".\"route_variants\"",
+          "btree",
+          "[\"routeId\"]"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.route_stop.route_stop_variandId_fkey",
+    "label": "Add foreign key \"route_stop_variandId_fkey\" on \"route_stop\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "route_stop_variandId_fkey",
+        "table": "route_stop"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"route_stop_variandId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "route_stop_variandId_fkey",
+          "public",
+          "\"public\".\"route_stop\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "FK \"route_stop_variandId_fkey\" on \"route_stop\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"route_stop_variandId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"route_stop\"\nADD CONSTRAINT \"route_stop_variandId_fkey\"\nFOREIGN KEY (\"variandId\")\nREFERENCES \"public\".\"route_variants\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"route_stop_variandId_fkey\" exists with the planned columns, referenced table and actions",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4 AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"c\".\"conkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"c\".\"conrelid\" AND key_attribute.attnum = key_column.attnum) = ($5)::jsonb AND \"c\".\"confrelid\" = to_regclass($6) AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"c\".\"confkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"c\".\"confrelid\" AND key_attribute.attnum = key_column.attnum) = ($7)::jsonb AND \"c\".\"confdeltype\" = $8 AND \"c\".\"confupdtype\" = $9)) AS \"result\"",
+        "params": [
+          "route_stop_variandId_fkey",
+          "public",
+          "\"public\".\"route_stop\"",
+          "f",
+          "[\"variandId\"]",
+          "\"public\".\"route_variants\"",
+          "[\"id\"]",
+          "a",
+          "a"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.route_stop.route_stop_stopId_fkey",
+    "label": "Add foreign key \"route_stop_stopId_fkey\" on \"route_stop\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "route_stop_stopId_fkey",
+        "table": "route_stop"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"route_stop_stopId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "route_stop_stopId_fkey",
+          "public",
+          "\"public\".\"route_stop\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "FK \"route_stop_stopId_fkey\" on \"route_stop\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"route_stop_stopId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"route_stop\"\nADD CONSTRAINT \"route_stop_stopId_fkey\"\nFOREIGN KEY (\"stopId\")\nREFERENCES \"public\".\"stops\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"route_stop_stopId_fkey\" exists with the planned columns, referenced table and actions",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4 AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"c\".\"conkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"c\".\"conrelid\" AND key_attribute.attnum = key_column.attnum) = ($5)::jsonb AND \"c\".\"confrelid\" = to_regclass($6) AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"c\".\"confkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"c\".\"confrelid\" AND key_attribute.attnum = key_column.attnum) = ($7)::jsonb AND \"c\".\"confdeltype\" = $8 AND \"c\".\"confupdtype\" = $9)) AS \"result\"",
+        "params": [
+          "route_stop_stopId_fkey",
+          "public",
+          "\"public\".\"route_stop\"",
+          "f",
+          "[\"stopId\"]",
+          "\"public\".\"stops\"",
+          "[\"id\"]",
+          "a",
+          "a"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.route_variants.route_variants_routeId_fkey",
+    "label": "Add foreign key \"route_variants_routeId_fkey\" on \"route_variants\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "route_variants_routeId_fkey",
+        "table": "route_variants"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"route_variants_routeId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "route_variants_routeId_fkey",
+          "public",
+          "\"public\".\"route_variants\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "FK \"route_variants_routeId_fkey\" on \"route_variants\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"route_variants_routeId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"route_variants\"\nADD CONSTRAINT \"route_variants_routeId_fkey\"\nFOREIGN KEY (\"routeId\")\nREFERENCES \"public\".\"lines\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"route_variants_routeId_fkey\" exists with the planned columns, referenced table and actions",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4 AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"c\".\"conkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"c\".\"conrelid\" AND key_attribute.attnum = key_column.attnum) = ($5)::jsonb AND \"c\".\"confrelid\" = to_regclass($6) AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"c\".\"confkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"c\".\"confrelid\" AND key_attribute.attnum = key_column.attnum) = ($7)::jsonb AND \"c\".\"confdeltype\" = $8 AND \"c\".\"confupdtype\" = $9)) AS \"result\"",
+        "params": [
+          "route_variants_routeId_fkey",
+          "public",
+          "\"public\".\"route_variants\"",
+          "f",
+          "[\"routeId\"]",
+          "\"public\".\"lines\"",
+          "[\"id\"]",
+          "a",
+          "a"
+        ]
+      }
+    ]
+  }
+]
