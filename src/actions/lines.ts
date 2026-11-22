@@ -1,35 +1,39 @@
 'use server';
 
-import { collection, doc, addDoc, getDocs, getDoc, updateDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
 import { unstable_cache } from 'next/cache';
+import { db } from '@/prisma/db';
 
 const getLinesCache = (lastUpdatedTime: number) =>
     unstable_cache(
         async () => {
-            const snap = await getDocs(collection(db, "lines"));
-            return snap.docs.map(doc => ({ ...doc.data() })) as Line[];
+            return await db.orm.public.Line.all() as Line[];
         },
         ['lines-cache', String(lastUpdatedTime)],
         { tags: ['lines'] }
     )();
 
 export async function getLines() {
-    const metadataRef = doc(db, "metadata", "list_updates");
-    const metaSnap = await getDoc(metadataRef);
-
     const timeNow = Math.floor(Date.now() / 1000);
-    const lastUpdatedTime = metaSnap.data()?.linesLastUpdated as number ?? timeNow;
+    const lastUpdatedMeta = await db.orm.public.Metadata.where({ key: 'lines_last_updated' }).first();
+    const lastUpdatedTime = lastUpdatedMeta?.updatedAt ?? timeNow;
 
     return await getLinesCache(lastUpdatedTime);
 }
 
-export async function addLine(line: Line) {
-    const collectionRef = collection(db, "lines");
-    await addDoc(collectionRef, line);
-
-    const metadataRef = doc(db, "metadata", "list_updates");
-    await updateDoc(metadataRef, {
-        linesLastUpdated: Math.floor(Date.now() / 1000)
-    });
-}
+// export async function addLine(line: Line) {
+//     const collectionRef = collection(db, "lines");
+//     await addDoc(collectionRef, line);
+//
+//     await db.orm.public.Line.create({
+//         id: line.id,
+//         name: line.name,
+//         type: line.type,
+//         /* TODO RouteVariants */
+//     });
+//
+//     await db.orm.public.Metadata.upsert({
+//         create: { key: 'lines_last_updated', value: 'success' },
+//         update: { value: 'success' },
+//         conflictOn: { key: 'lines_last_updated' }
+//     });
+// }

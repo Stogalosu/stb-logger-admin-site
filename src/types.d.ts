@@ -9,10 +9,7 @@ declare enum LineType {
 interface Line {
     id: number;
     name: string;
-    type: Type;
-    from: string;
-    to: string;
-    paths: Path[];
+    type: LineType;
 }
 
 interface Stop {
