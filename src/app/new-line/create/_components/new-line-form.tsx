@@ -101,7 +101,10 @@ export default function NewLineForm({ lines }: { lines: Line[] }) {
                         reject(new Error(result.error));
                         return;
                     }
-                    newLineContext.setData(result.data!!);
+                    newLineContext.setData({
+                        outbound: result.data!!.outbound!!,
+                        inbound: result.data!!.inbound!!
+                    });
                     router.push('/new-line/edit');
                     resolve(true);
                 } catch (error) {

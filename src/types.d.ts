@@ -39,7 +39,8 @@ interface RouteStop {
 }
 
 interface NewLineData {
-    variant: RouteVariant | null;
+    outbound: RouteVariant | null;
+    inbound: RouteVariant | null;
     routeStops: RouteStop[] | null;
 }
 

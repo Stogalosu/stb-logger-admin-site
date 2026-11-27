@@ -1,90 +1,90 @@
 'use server';
 
-import { addLine } from "@/actions/lines";
-import AdmZip from 'adm-zip';
 import { parseGPXWithCustomParser, GeoJSON } from "@we-gold/gpxjs";
 import { DOMParser } from "xmldom-qsa";
-import { findClosestStop } from "@/actions/stops";
+import { Geometry } from "@prisma/orm-extension-postgis/geojson";
 
-function isValidZipBuffer(buffer: Buffer) {
-    return buffer[0] === 0x50 && buffer[1] === 0x4b;
-}
-
-async function processZip(file: File): Promise<{ data: GeoJSON[] | null, error: any }> {
-    const buffer = Buffer.from(await file.arrayBuffer());
-
-    if(!isValidZipBuffer(buffer))
-        return { data: null, error: "Invalid zip file" };
-
-    let zip: AdmZip;
-    try {
-        zip = new AdmZip(buffer);
-    } catch {
-        return { data: null, error: "Could not read zip file" };
-    }
-
-    const gpxEntries = zip.getEntries().filter(e =>
-        e.name.endsWith('.gpx') &&
-        !e.name.startsWith('._') &&
-        !e.entryName.startsWith('__MACOSX/')
-    );
-    if (gpxEntries.length === 0) {
-        return { data: null, error: "No GPX files found in zip" };
-    }
-
+async function processGpx(outboundFile: File, inboundFile: File): Promise<{ data: { outbound: RouteVariant, inbound: RouteVariant } | null, error: any }> {
+    const outboundGpx = await outboundFile.text();
+    const inboundGpx = await inboundFile.text();
     const customParseMethod = (txt: string): Document | null => {
         return new DOMParser().parseFromString(txt, "text/xml");
     }
 
-    let geoJsons = [];
-    for(const entry of gpxEntries) {
-        const gpx = entry.getData().toString('utf-8');
-        const [parsedGpx, error] = parseGPXWithCustomParser(gpx, customParseMethod);
-        if(error)
-            return { data: null, error: `Could not parse GPX file ${entry.name}: ${error}` };
-        const geoJson = parsedGpx.toGeoJSON();
-        geoJsons.push(geoJson);
-    }
+    const [parsedOutbound, errorO] = parseGPXWithCustomParser(outboundGpx, customParseMethod);
+    const [parsedInbound, errorI] = parseGPXWithCustomParser(inboundGpx, customParseMethod);
+    if(errorO)
+        return { data: null, error: `Could not parse outbound GPX file: ${errorO}` };
+    if(errorI)
+        return { data: null, error: `Could not parse inbound GPX file: ${errorI}` };
+    const outboundGeoJson = parsedOutbound.toGeoJSON();
+    const inboundGeoJson = parsedInbound.toGeoJSON();
 
-    return { data: geoJsons, error: null };
+    if(outboundGeoJson.features.length != 1)
+        return { data: null, error: 'Outbound GPX doesn\'t have exactly one feature!' };
+    if(outboundGeoJson.features[0].geometry.type != 'LineString')
+        return { data: null, error: 'Outbound GPX has no LineString feature!' };
+
+    if(inboundGeoJson.features.length != 1)
+        return { data: null, error: 'Inbound GPX doesn\'t have exactly one feature!' };
+    if(inboundGeoJson.features[0].geometry.type != 'LineString')
+        return { data: null, error: 'Inbound GPX has no LineString feature!' };
+
+    const outboundGeometry = {
+        type: outboundGeoJson.features[0].geometry.type,
+        coordinates: outboundGeoJson.features[0].geometry.coordinates,
+        srid: 4326
+    } as Geometry;
+    const outboundVariant: RouteVariant = {
+        id: 0,
+        lineId: 0,
+        direction: 'outbound',
+        name: 'Main Outbound',
+        scheduleType: 'daily',
+        path: outboundGeometry
+    };
+
+    const inboundGeometry = {
+        type: inboundGeoJson.features[0].geometry.type,
+        coordinates: inboundGeoJson.features[0].geometry.coordinates,
+        srid: 4326
+    } as Geometry;
+    const inboundVariant: RouteVariant = {
+        id: 0,
+        lineId: 0,
+        direction: 'inbound',
+        name: 'Main Inbound',
+        scheduleType: 'daily',
+        path: inboundGeometry
+    };
+
+    return { data: { outbound: outboundVariant, inbound: inboundVariant }, error: null };
 }
 
-async function processGeoJsons(geoJsons: GeoJSON[]) {
-    let paths: Path[] = [];
-    for(const json of geoJsons) {
-        const coords = json.features[0].geometry.coordinates as  number[][];
-        const startStop = await findClosestStop(coords[0][1], coords[0][0]);
-        const endStop = await findClosestStop(coords[coords.length - 1][1], coords[coords.length - 1][0]);
-
-        paths.push({ startId: startStop.id, endId: endStop.id });
-    }
-    return paths;
-}
-
-export async function processFormData(formData: FormData): Promise<{ data: { line: Line, paths: Path[] } | null, error: any}> {
+export async function processFormData(formData: FormData): Promise<{ data: { outbound: RouteVariant, inbound: RouteVariant } | null, error: any }> {
     const name = String(formData.get('name'));
     const id = Number(formData.get('id'));
     const type = formData.get('type') as LineType;
     const from = String(formData.get('from'));
     const to = String(formData.get('to'));
 
-    const file = formData.get("file") as File;
+    const outbound = formData.get("outbound") as File;
+    const inbound = formData.get("inbound") as File;
 
     // Server-side file checking
-    if (!file || file.size === 0)
-        return { data: null, error: "No file uploaded" };
+    if (!outbound || outbound.size === 0)
+        return { data: null, error: "No outbound file uploaded" };
+    if (!inbound || inbound.size === 0)
+        return { data: null, error: "No inbound file uploaded" };
 
-    if (!file.name.toLowerCase().endsWith(".zip"))
-        return { data: null, error: "File must have a .zip extension" };
+    if (!outbound.name.toLowerCase().endsWith(".gpx") || !inbound.name.toLowerCase().endsWith(".gpx"))
+        return { data: null, error: "Files must have a .gpx extension" };
 
-    if (file.size > 10 * 1024 * 1024)
+    if (outbound.size > 10 * 1024 * 1024 || inbound.size > 10 * 1024 * 1024)
         return { data: null, error: "File too large" };
 
-    const { data: geoJsons, error: geoError } = await processZip(file);
-    if(geoError) return { data: null, error: geoError };
+    const { data: variants, error: error } = await processGpx(outbound, inbound);
+    if(error) return { data: null, error: error };
 
-    const paths = await processGeoJsons(geoJsons!!);
-    const line: Line = { name: name, id: id, type: type, from: from, to: to, paths: [] };
-
-    return { data: { line, paths }, error: null };
+    return { data: variants, error: null };
 }
