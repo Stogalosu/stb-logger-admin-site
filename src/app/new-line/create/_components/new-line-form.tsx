@@ -23,16 +23,16 @@ import { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useNewLineContext } from "../../_context/new-line-context";
 
-const ACCEPTED_ZIP_TYPES = ["application/zip", "application/x-zip-compressed"];
-
 export default function NewLineForm({ lines }: { lines: Line[] }) {
     const router = useRouter();
     const nameRef = useRef<HTMLInputElement>(null);
     const idRef = useRef<HTMLInputElement>(null);
-    const fileRef = useRef<HTMLInputElement>(null);
+    const outboundRef = useRef<HTMLInputElement>(null);
+    const inboundRef = useRef<HTMLInputElement>(null);
     const [nameValid, setNameValid] = useState(true);
     const [idValid, setIdValid] = useState(true);
-    const [fileValid, setFileValid] = useState(true);
+    const [outboundValid, setOutboundValid] = useState(true);
+    const [inboundValid, setInboundValid] = useState(true);
 
     const newLineContext = useNewLineContext();
 
@@ -66,7 +66,7 @@ export default function NewLineForm({ lines }: { lines: Line[] }) {
     }
 
     function isFileValid(file: File) {
-        if(!ACCEPTED_ZIP_TYPES.includes(file.type) && !file.name.endsWith(".zip"))
+        if(!file.name.endsWith(".gpx"))
             return false;
         if(file.size > 10*1024*1024) return false;
         return true;
@@ -83,13 +83,17 @@ export default function NewLineForm({ lines }: { lines: Line[] }) {
         const isValidId = isIdValid(idValue);
         setIdValid(isValidId);
 
-        const fileValue = fileRef.current?.files?.[0];
-        const isValidFile = !!fileValue && isFileValid(fileValue);
-        setFileValid(isValidFile);
+        const outboundValue = outboundRef.current?.files?.[0];
+        const isValidOutbound = !!outboundValue && isFileValid(outboundValue);
+        setInboundValid(isValidOutbound);
+
+        const inboundValue = inboundRef.current?.files?.[0];
+        const isValidInbound = !!inboundValue && isFileValid(inboundValue);
+        setInboundValid(isValidInbound);
 
         const formData = new FormData(event.currentTarget);
 
-        if(isValidName && isValidId && isValidFile) {
+        if(isValidName && isValidId && isValidOutbound && isValidInbound) {
             const onSubmitPromise = new Promise(async (resolve, reject) => {
                 try {
                     const result = await processFormData(formData);
@@ -119,19 +123,39 @@ export default function NewLineForm({ lines }: { lines: Line[] }) {
     return (
         <form onSubmit={onSubmit} className="w-full max-w-sm">
             <FieldGroup>
-                <Field data-invalid={!nameValid ? "true" : "false"}>
-                    <FieldLabel htmlFor="name">Name</FieldLabel>
-                    <Input
-                        id="name"
-                        name="name"
-                        type="text"
-                        placeholder="311"
-                        ref={nameRef}
-                        required
-                        aria-invalid={!nameValid ? "true" : "false"}
-                    />
-                    <FieldDescription>This is pretty self-explanatory</FieldDescription>
-                </Field>
+                <div className="flex flex-row gap-8">
+                    <Field data-invalid={!nameValid ? "true" : "false"}>
+                        <FieldLabel htmlFor="name">Name</FieldLabel>
+                        <Input
+                            id="name"
+                            name="name"
+                            type="text"
+                            placeholder="311"
+                            ref={nameRef}
+                            required
+                            aria-invalid={!nameValid ? "true" : "false"}
+                        />
+                    </Field>
+
+                    <Field>
+                        <FieldLabel htmlFor="type">Type</FieldLabel>
+                        <Select items={types} id="type" name="type">
+                            <SelectTrigger>
+                                <SelectValue placeholder="Bus" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectGroup>
+                                    {types.map((item) => (
+                                        <SelectItem key={item.value} value={item.value}>
+                                            {item.label}
+                                        </SelectItem>
+                                    ))}
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                    </Field>
+                </div>
+
                 <Field data-invalid={!idValid ? "true" : "false"}>
                     <FieldLabel htmlFor="id">Line ID</FieldLabel>
                     <div className="flex flex-row gap-4">
@@ -152,23 +176,7 @@ export default function NewLineForm({ lines }: { lines: Line[] }) {
                         {idValid ? "Autocomplete is WIP" : "IDs must be unique."}
                     </FieldDescription>
                 </Field>
-                <Field>
-                    <FieldLabel htmlFor="type">Type</FieldLabel>
-                    <Select items={types} id="type" name="type">
-                        <SelectTrigger>
-                            <SelectValue placeholder="Bus" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectGroup>
-                                {types.map((item) => (
-                                    <SelectItem key={item.value} value={item.value}>
-                                        {item.label}
-                                    </SelectItem>
-                                ))}
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
-                </Field>
+
                 <div className="flex flex-row gap-8">
                     <Field>
                         <FieldLabel htmlFor="from">From</FieldLabel>
@@ -193,21 +201,39 @@ export default function NewLineForm({ lines }: { lines: Line[] }) {
                         <FieldDescription>End of route</FieldDescription>
                     </Field>
                 </div>
-                <Field data-invalid={!fileValid ? "true" : "false"}>
-                    <FieldLabel htmlFor="file">Zip with line GPX files</FieldLabel>
+
+                <Field data-invalid={!outboundValid ? "true" : "false"}>
+                    <FieldLabel htmlFor="outbound">Outbound route GPX file</FieldLabel>
                     <Input
-                        id="file"
-                        name="file"
+                        id="outbound"
+                        name="outbound"
                         type="file"
-                        ref={fileRef}
-                        accept=".zip"
+                        ref={outboundRef}
+                        accept=".gpx"
                         required={true}
-                        aria-invalid={!fileValid ? "true" : "false"}
+                        aria-invalid={!outboundValid ? "true" : "false"}
                     />
                     <FieldDescription>
-                        {!fileValid && "File must be a .zip under 10MB"}
+                        {!outboundValid && "File must be a .gpx under 10MB"}
                     </FieldDescription>
                 </Field>
+
+                <Field data-invalid={!inboundValid ? "true" : "false"}>
+                    <FieldLabel htmlFor="inbound">Inbound route GPX file</FieldLabel>
+                    <Input
+                        id="inbound"
+                        name="inbound"
+                        type="file"
+                        ref={inboundRef}
+                        accept=".gpx"
+                        required={true}
+                        aria-invalid={!inboundValid ? "true" : "false"}
+                    />
+                    <FieldDescription>
+                        {!inboundValid && "File must be a .gpx under 10MB"}
+                    </FieldDescription>
+                </Field>
+
                 <Field className="self-center w-25 pt-8">
                     <Button type="submit" variant="default" >
                         Next

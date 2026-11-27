@@ -14,6 +14,15 @@ interface Line {
     type: LineType;
 }
 
+interface RouteVariant {
+    id: number;
+    lineId: number;
+    direction: string;
+    name: string;
+    scheduleType: string;
+    path: Geometry;
+}
+
 interface Stop {
     id: number;
     name: string;
@@ -22,14 +31,16 @@ interface Stop {
     underground: boolean;
 }
 
-interface Path {
-    startId: number;
-    endId: number;
+interface RouteStop {
+    variantId: number;
+    stopId: number;
+    sequence: number;
+    fraction: number;
 }
 
 interface NewLineData {
-    line: Line | null;
-    paths: Path[] | null;
+    variant: RouteVariant | null;
+    routeStops: RouteStop[] | null;
 }
 
 interface NewLineContextType {

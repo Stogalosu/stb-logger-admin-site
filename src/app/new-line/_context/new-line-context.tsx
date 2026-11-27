@@ -5,7 +5,7 @@ import { createContext, useContext, useState, ReactNode, useEffect } from "react
 const NewLineContext = createContext<NewLineContextType | null>(null);
 
 export function NewLineProvider({ children }: { children: React.ReactNode }) {
-    const [data, setData] = useState<NewLineData>({ line: null, paths: null });
+    const [data, setData] = useState<NewLineData>({ variant: null, routeStops: null });
     const [isInitialized, setIsInitialized] = useState(false);
 
     useEffect(() => {
