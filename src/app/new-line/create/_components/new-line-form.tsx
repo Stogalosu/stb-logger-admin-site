@@ -19,7 +19,7 @@ import {
 import { processFormData } from "../actions";
 import { toast } from "@/components/ui/toast";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { useNewLineContext } from "../../_context/new-line-context";
 
@@ -33,6 +33,8 @@ export default function NewLineForm({ lines }: { lines: Line[] }) {
     const [idValid, setIdValid] = useState(true);
     const [outboundValid, setOutboundValid] = useState(true);
     const [inboundValid, setInboundValid] = useState(true);
+    const [infoText, setInfoText] = useState("");
+    const [infoColor, setInfoColor] = useState("");
 
     const newLineContext = useNewLineContext();
 
@@ -122,6 +124,47 @@ export default function NewLineForm({ lines }: { lines: Line[] }) {
             )
         }
     }
+
+    const textColors: Record<string, string> = {
+        blue: 'text-blue-600',
+        red: 'text-red-600',
+        green: 'text-green-600',
+        amber: 'text-amber-600',
+    };
+
+    useEffect(() => {
+        setTimeout( () => {
+            const id = idRef.current?.value ?? '';
+            const name = nameRef.current?.value ?? '';
+
+            if (id == '' || name == '') {
+                setInfoText('');
+                setInfoColor('');
+                return;
+            } else {
+                let line: Line = lines.find((l) => l.id == Number(id));
+                if (line == null) {
+                    setInfoText('No line already exists with this ID. A new one will be created.');
+                    setInfoColor('green');
+                    return;
+                } else if (line.name != name) {
+                    setInfoText('Name doesn\'t match existing line!');
+                    setInfoColor('red');
+                    return;
+                }
+                line = lines.find((l) => l.name == name);
+                if (line != null) {
+                    setInfoText('A line with this ID already exists. A new route variant for it will be created.');
+                    setInfoColor('green');
+                    return;
+                } else {
+                    setInfoText('ID doesn\'t match existing line!');
+                    setInfoColor('red');
+                    return;
+                }
+            }
+        }, 2000);
+    }, [idRef, nameRef]);
 
     return (
         <form onSubmit={onSubmit} className="w-full max-w-sm">
@@ -237,10 +280,13 @@ export default function NewLineForm({ lines }: { lines: Line[] }) {
                     </FieldDescription>
                 </Field>
 
-                <Field className="self-center w-25 pt-8">
-                    <Button type="submit" variant="default" >
-                        Next
-                    </Button>
+                <Field>
+                    <div className="flex flex-col items-center gap-4">
+                        <span className={`${textColors[infoColor] ?? ''}`}>{infoText}</span>
+                        <Button type="submit" variant="default" >
+                            Next
+                        </Button>
+                    </div>
                 </Field>
             </FieldGroup>
         </form>
