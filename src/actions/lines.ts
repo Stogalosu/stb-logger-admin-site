@@ -27,20 +27,20 @@ export async function getLines() {
     return await getLinesCache(lastUpdatedTime);
 }
 
-// export async function addLine(line: Line) {
-//     const collectionRef = collection(db, "lines");
-//     await addDoc(collectionRef, line);
-//
-//     await db.orm.public.Line.create({
-//         id: line.id,
-//         name: line.name,
-//         type: line.type,
-//         /* TODO RouteVariants */
-//     });
-//
-//     await db.orm.public.Metadata.upsert({
-//         create: { key: 'lines_last_updated', value: 'success' },
-//         update: { value: 'success' },
-//         conflictOn: { key: 'lines_last_updated' }
-//     });
-// }
+export async function addLine(line: Line) {
+    const collectionRef = collection(db, "lines");
+    await addDoc(collectionRef, line);
+
+    await db.orm.public.Line.create({
+        id: line.id,
+        name: line.name,
+        type: line.type,
+        variants: []
+    });
+
+    await db.orm.public.Metadata.upsert({
+        create: { key: 'lines_last_updated', value: 'success' },
+        update: { value: 'success' },
+        conflictOn: { key: 'lines_last_updated' }
+    });
+}
